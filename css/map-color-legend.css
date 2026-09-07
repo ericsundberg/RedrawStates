@@ -1,0 +1,127 @@
+/* Original-style and candidate-neutral vote color legend */
+
+.map-color-legend {
+  margin-top: 4px;
+  padding: 10px 0;
+  border-top: 1px solid var(--workspace-border);
+  border-bottom: 1px solid var(--workspace-border);
+}
+
+.map-color-legend[hidden] {
+  display: none !important;
+}
+
+.map-color-legend h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.map-color-legend-description {
+  margin: 0 0 10px;
+  color: var(--workspace-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.map-color-legend-note {
+  margin: 8px 0 0;
+  color: var(--workspace-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.map-color-legend-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-color-legend-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(70px, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.map-color-legend-label {
+  overflow: hidden;
+  color: var(--workspace-text);
+  font-size: 11px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-color-legend-strip {
+  display: block;
+  height: 11px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+}
+
+.map-color-legend-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  margin-left: calc(50% + 4px);
+  color: var(--workspace-muted);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.map-color-legend-extra {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--workspace-border);
+  font-size: 11px;
+}
+
+.map-color-legend-extra summary {
+  color: var(--workspace-text);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.map-color-legend-extra .map-color-legend-description {
+  margin-top: 8px;
+}
+
+.map-color-legend-neutral {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--workspace-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.map-color-legend-neutral-swatch {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  margin-top: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+}
+
+/* Original county-boundary colors, without overriding selection. */
+
+.map-session-county.vote-context-dem:not(.is-selected) {
+  stroke: #ccf;
+}
+
+.map-session-county.vote-context-gop:not(.is-selected) {
+  stroke: #fcc;
+}
+
+.map-session-county:hover:not(.is-selected) {
+  stroke: #222;
+}
+
+.map-session-county.is-selected {
+  stroke: #212121;
+}

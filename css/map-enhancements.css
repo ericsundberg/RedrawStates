@@ -1,0 +1,96 @@
+/* Additional map controls and sortable details */
+
+.session-controls [hidden] {
+  display: none !important;
+}
+
+.state-table-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 7px 12px;
+  border-bottom: 1px solid #e2e5e9;
+  background: #fff;
+}
+
+.state-table-controls label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: #626b76;
+  font-size: 11px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.state-table-controls .form-control {
+  width: auto;
+  min-width: 130px;
+  height: 29px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.state-table-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: right;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.state-table th:first-child .state-table-sort {
+  justify-content: center;
+}
+
+.state-table-sort:hover {
+  color: #315f9e;
+  text-decoration: underline;
+}
+
+.state-table-sort:focus-visible {
+  outline: 2px solid #315f9e;
+  outline-offset: 3px;
+}
+
+.sort-indicator {
+  color: #315f9e;
+  font-size: 9px;
+}
+
+#area-data-note {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--workspace-border);
+  color: var(--workspace-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .state-table-controls {
+    justify-content: flex-start;
+    gap: 7px;
+  }
+
+  .state-table-controls label {
+    font-size: 10px;
+  }
+
+  .state-table-controls .form-control {
+    min-width: 105px;
+    font-size: 10px;
+  }
+}
