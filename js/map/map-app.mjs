@@ -11,6 +11,7 @@ import {
 } from "../data/area-overlay.mjs";
 
 import { createStateSession } from "../model/state-session.mjs";
+import { createStateManager } from "../model/state-management.mjs";
 
 import {
   computeAllocation,
@@ -25,12 +26,16 @@ import {
 import { createMapView } from "./map-view.mjs";
 import { createShareUrl, restoreShare } from "./map-share.mjs";
 import { mountMapDetails } from "../ui/map-details.mjs";
+import {
+  mountStateManagementDialog,
+} from "../ui/state-management-dialog.mjs";
 
 export function startMapApp() {
   const datasetCache = new Map();
 
   let dataset = null;
   let session = null;
+  let stateManager = null;
   let selected = new Set();
   let mode = "pickup";
   let metric = "votes";
@@ -84,22 +89,16 @@ export function startMapApp() {
     },
 
     createState(name, abbreviation) {
-      if (!session || loading) return;
+      if (!stateManager || loading) return;
 
       try {
-        const id = `custom:${crypto.randomUUID()}`;
+        const result = stateManager.create({ name, abbreviation });
 
-        session.addState({
-          id,
-          name,
-          abbreviation,
-          kind: "state",
+        finishStateChange({
+          type: "create",
+          stateId: result.state.id,
+          message: `Created ${result.state.name}. Select counties to move into it.`,
         });
-
-        ui.setDestination(id);
-        ui.setStatus(`Created ${name}. Select counties to move into it.`);
-        clearSharedAddress();
-        render();
       } catch (error) {
         ui.setStatus(error.message);
       }
@@ -114,6 +113,24 @@ export function startMapApp() {
       clearSharedAddress();
       render();
       ui.setStatus("Original boundaries restored.");
+    },
+  });
+
+  const managerView = mountStateManagementDialog({
+    getManager() {
+      return loading ? null : stateManager;
+    },
+
+    getDefaultStateId() {
+      return ui.getDestination();
+    },
+
+    onOpen() {
+      holdKey = null;
+    },
+
+    onChange(change) {
+      finishStateChange(change);
     },
   });
 
@@ -190,6 +207,32 @@ export function startMapApp() {
     url.search = "";
     url.searchParams.set("year", dataset.metadata.id);
     window.history.replaceState(null, "", url);
+
+    const shareGroup = document.getElementById("shareGroup");
+    const shareInput = document.getElementById("clipboard-target");
+
+    if (shareGroup) shareGroup.style.display = "none";
+    if (shareInput) shareInput.value = "";
+  }
+
+  function finishStateChange(change) {
+    if (!session) return;
+
+    const states = session.getSnapshot().model.states;
+    const preferred = change.destinationId || change.stateId;
+
+    const destinationId = states.some((state) => state.id === preferred)
+      ? preferred
+      : states[0].id;
+
+    if (change.type === "dissolve") {
+      setMode("pickup");
+    }
+
+    ui.setDestination(destinationId);
+    clearSharedAddress();
+    render();
+    ui.setStatus(change.message);
   }
 
   function moveSelected(destinationId) {
@@ -237,6 +280,7 @@ export function startMapApp() {
 
     view.render(viewState);
     ui.render(viewState);
+    managerView.refresh();
 
     const incomeMode =
       dataset.metadata.measurement.kind === "income-weight";
@@ -275,10 +319,12 @@ export function startMapApp() {
     const request = ++requestNumber;
     loading = true;
     ui.setBusy(true);
+    managerView.setBusy(true);
     ui.setStatus("Loading dataset...");
 
     const previousDataset = dataset;
     const previousSession = session;
+    const previousManager = stateManager;
     const previousModel = preserve && session
       ? session.getSnapshot().model
       : null;
@@ -310,8 +356,17 @@ export function startMapApp() {
         nextSession.replaceModel(previousModel);
       }
 
+      const nextManager = createStateManager(
+        nextSession,
+        nextDataset.model,
+        () => `custom:${crypto.randomUUID()}`
+      );
+
+      managerView.close();
+
       dataset = nextDataset;
       session = nextSession;
+      stateManager = nextManager;
       selected.clear();
       setMode("pickup");
 
@@ -336,6 +391,7 @@ export function startMapApp() {
       if (request === requestNumber) {
         dataset = previousDataset;
         session = previousSession;
+        stateManager = previousManager;
         yearSelect.value = previousDataset?.metadata.id ?? "2024";
         ui.setStatus(`Could not load dataset: ${error.message}`);
       }
@@ -343,6 +399,7 @@ export function startMapApp() {
       if (request === requestNumber) {
         loading = false;
         ui.setBusy(false);
+        managerView.setBusy(false);
       }
     }
   }
@@ -375,7 +432,7 @@ export function startMapApp() {
 
   function isTyping(target) {
     return Boolean(target?.closest?.(
-      "input, select, textarea, button, [contenteditable], " +
+      "input, select, textarea, button, dialog, [contenteditable], " +
       "[role='tab'], [role='slider']"
     ));
   }

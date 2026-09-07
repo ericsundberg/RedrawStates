@@ -1,0 +1,140 @@
+/* State-management dialog */
+
+.state-manager-dialog {
+  width: min(680px, calc(100% - 32px));
+  max-width: none;
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: 1px solid #cfd6df;
+  border-radius: 8px;
+  background: #fff;
+  color: #343a40;
+  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.18);
+  overflow: auto;
+}
+
+.state-manager-dialog::backdrop {
+  background: rgba(20, 30, 45, 0.38);
+}
+
+.state-manager-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #e1e5eb;
+}
+
+.state-manager-heading h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.state-manager-heading p {
+  margin: 0;
+  color: #65707d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.state-manager-content {
+  padding: 18px 20px 20px;
+}
+
+.state-manager-content label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.state-manager-content .form-control {
+  width: 100%;
+}
+
+.state-manager-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(110px, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.state-manager-note {
+  margin: 8px 0 0;
+  color: #65707d;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.state-manager-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.state-manager-actions .btn {
+  margin: 0;
+}
+
+.state-manager-removal {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #e1e5eb;
+  border-radius: 5px;
+  background: #f8fafc;
+}
+
+.state-manager-removal h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.state-manager-removal p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.state-manager-confirmation {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #edc4c4;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.state-manager-confirmation p {
+  margin: 0 0 12px;
+}
+
+.state-manager-status {
+  min-height: 18px;
+  margin: 14px 0 0;
+  color: #526273;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.state-manager-dialog [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 520px) {
+  .state-manager-heading,
+  .state-manager-content {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .state-manager-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .state-manager-actions .btn {
+    flex: 1 1 auto;
+  }
+}

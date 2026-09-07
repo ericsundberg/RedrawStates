@@ -6,6 +6,7 @@ for (const href of [
   "css/map-session.css",
   "css/map-color-legend.css",
   "css/map-enhancements.css",
+  "css/state-management.css",
 ]) {
   const stylesheet = document.createElement("link");
   stylesheet.rel = "stylesheet";
