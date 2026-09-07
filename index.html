@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Redraw the States</title>
+  <meta name="description" content="Explore hypothetical United States boundaries by moving counties between states and examining demographic and electoral data.">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/map.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+</head>
+<body>
+  <div class="hidden tooltip" id="instructionsTooltip">
+    <div class="tooltip-inner">
+      <p class="instructions">Click a county to select or deselect it.</p>
+      <p class="instructions">Hold down Q to select counties as you move over them.</p>
+      <p class="instructions">Hold down W to deselect them.</p>
+    </div>
+  </div>
+
+  <div class="input-group" id="shareGroup">
+    <input
+      type="text"
+      class="form-control"
+      value=""
+      onclick="this.select();"
+      id="clipboard-target"
+      aria-label="Shareable map URL"
+      readonly
+    >
+    <span class="input-group-btn">
+      <button
+        id="copy-button"
+        class="btn btn-default"
+        data-clipboard-tooltip
+        data-clipboard-target="#clipboard-target"
+        type="button"
+        aria-label="Copy shareable URL"
+      >
+        <img src="clippy.svg" width="14" alt="">
+      </button>
+    </span>
+  </div>
+
+  <main class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="ev-bar">
+          <div class="ev-bar-dem-total"></div>
+          <div class="ev-bar-gop-total"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-10" id="states-div">
+        <svg id="states-svg" role="img" aria-label="Interactive United States county map"></svg>
+      </div>
+
+      <div class="col-sm-2">
+        <div class="row">
+          <div class="col-sm-12">
+            <h2 class="instructions">Instructions</h2>
+            <p class="instructions" id="lede">
+              Move counties between states and explore how state boundaries and electoral totals change.
+            </p>
+            <p class="instructions">
+              <a href="#" id="instructionsHelper">Choose a county</a>
+              (or several) to move to a new state. Then click the
+              <b>Move</b> button and the state you want to move your counties to.
+            </p>
+            <p class="instructions">
+              The current simulator recalculates electoral totals after county assignments change.
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <button
+              type="button"
+              class="btn btn-danger btn-md btn-block btn-space"
+              id="switchModeButton"
+            >
+              <u>M</u>ove
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <button
+              type="button"
+              class="btn btn-primary btn-md btn-block btn-space"
+              id="countyModeButton"
+            >
+              Hide Counties
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <button
+              type="button"
+              class="btn btn-primary btn-md btn-block btn-space"
+              id="shareButton"
+            >
+              Share
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-6 control-label" for="selectYear">
+                  Year:
+                </label>
+                <div class="col-sm-6">
+                  <select class="form-control" id="selectYear">
+                    <option value="2004">2004</option>
+                    <option value="2008">2008</option>
+                    <option value="2012">2012</option>
+                    <option value="2016i">2016 Income</option>
+                    <option value="2016">2016</option>
+                    <option value="2020">2020</option>
+                    <option value="2020s">2020 w/ New Populations</option>
+                    <option value="2024" selected>2024</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>Details</h2>
+        <div class="table-responsive">
+          <table class="table table-striped" style="text-align: right;">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>Population</th>
+                <th>Electors</th>
+                <th>Democrat</th>
+                <th>GOP</th>
+                <th>Green</th>
+                <th>Libertarian</th>
+                <th id="unaffiliated-header">Kennedy</th>
+                <th>Other</th>
+              </tr>
+            </thead>
+            <tbody id="states"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <footer class="row">
+      <div class="col-sm-12">
+        <p>
+          Development fork:
+          <a href="https://github.com/ericsundberg/RedrawStates">Eric Sundberg / RedrawStates</a>.
+          Originally created by
+          <a href="https://github.com/khwilson/RedrawStates">Kevin Hayes Wilson and contributors</a>.
+          Data sources and acknowledgments are documented in the repository.
+        </p>
+        <p>
+          This is a hypothetical boundary simulator. Its data and simplified
+          calculations should not be treated as official election results.
+        </p>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/d3.v7.min.js"></script>
+  <script src="js/topojson.v3.min.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>
