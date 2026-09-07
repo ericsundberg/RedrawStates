@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Redraw the States</title>
-  <meta name="description" content="Explore hypothetical United States boundaries by moving counties between states and examining demographic and electoral data.">
+  <meta
+    name="description"
+    content="Explore hypothetical United States boundaries by moving counties and examining geographic, demographic, and electoral data."
+  >
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="css/workspace.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -47,144 +51,314 @@
     </span>
   </div>
 
-  <main class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="ev-bar">
-          <div class="ev-bar-dem-total"></div>
-          <div class="ev-bar-gop-total"></div>
+  <main class="redraw-app" id="redraw-app">
+    <section class="map-stage" id="map-stage" aria-label="Map workspace">
+      <div class="map-main">
+        <header class="map-toolbar">
+          <div class="map-toolbar-heading">
+            <strong>Redraw the States</strong>
+            <span class="map-toolbar-subtitle">Boundary simulator</span>
+          </div>
+
+          <button
+            class="workspace-button"
+            type="button"
+            id="tools-toggle"
+            aria-controls="map-tools"
+            aria-expanded="true"
+          >
+            Tools
+          </button>
+        </header>
+
+        <div class="map-canvas" id="states-div">
+          <svg
+            id="states-svg"
+            role="img"
+            aria-label="Interactive United States county map"
+            preserveAspectRatio="xMidYMid meet"
+          ></svg>
+        </div>
+
+        <div class="map-summary">
+          <div class="summary-heading">
+            <span>Electoral totals</span>
+            <span class="summary-caption">Legacy simulation</span>
+          </div>
+
+          <div
+            class="ev-bar"
+            role="group"
+            aria-label="Simulated electoral vote totals"
+            aria-describedby="legacy-model-note"
+          >
+            <div class="ev-bar-dem-total"></div>
+            <div class="ev-bar-gop-total"></div>
+          </div>
         </div>
       </div>
+
+      <aside class="map-tools" id="map-tools" aria-label="Map controls">
+        <div class="tools-heading">
+          <strong>Map controls</strong>
+          <button
+            class="workspace-button workspace-button-small"
+            type="button"
+            id="tools-close"
+            aria-label="Close map controls"
+          >
+            &times;
+          </button>
+        </div>
+
+        <p class="tools-description">
+          Select counties, then move them to another state. Changes update
+          the current simulation.
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-danger btn-block"
+          id="switchModeButton"
+        >
+          <u>M</u>ove
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          id="countyModeButton"
+        >
+          Hide Counties
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          id="shareButton"
+        >
+          Share
+        </button>
+
+        <div class="tools-field">
+          <label for="selectYear">Election dataset</label>
+          <select class="form-control" id="selectYear">
+            <option value="2004">2004</option>
+            <option value="2008">2008</option>
+            <option value="2012">2012</option>
+            <option value="2016i">2016 Income</option>
+            <option value="2016">2016</option>
+            <option value="2020">2020</option>
+            <option value="2020s">2020 w/ New Populations</option>
+            <option value="2024" selected>2024</option>
+          </select>
+        </div>
+
+        <div class="tools-help">
+          <a href="#" id="instructionsHelper">County selection help</a>
+          <p>Keyboard: M to move, Q to select, W to deselect, P to toggle vote display.</p>
+        </div>
+
+        <p class="sr-only" id="lede"></p>
+      </aside>
+    </section>
+
+    <div
+      class="dock-splitter"
+      id="dock-splitter"
+      role="separator"
+      aria-label="Resize details pane"
+      aria-orientation="horizontal"
+      aria-controls="workspace-dock"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="34"
+      tabindex="0"
+    >
+      <span class="splitter-grip" aria-hidden="true"></span>
     </div>
 
-    <div class="row">
-      <div class="col-sm-10" id="states-div">
-        <svg id="states-svg" role="img" aria-label="Interactive United States county map"></svg>
-      </div>
+    <section class="workspace-dock" id="workspace-dock" aria-label="Information pane">
+      <header class="dock-heading">
+        <h1 id="dock-title">Details</h1>
 
-      <div class="col-sm-2">
-        <div class="row">
-          <div class="col-sm-12">
-            <h2 class="instructions">Instructions</h2>
-            <p class="instructions" id="lede">
-              Move counties between states and explore how state boundaries and electoral totals change.
-            </p>
-            <p class="instructions">
-              <a href="#" id="instructionsHelper">Choose a county</a>
-              (or several) to move to a new state. Then click the
-              <b>Move</b> button and the state you want to move your counties to.
-            </p>
-            <p class="instructions">
-              The current simulator recalculates electoral totals after county assignments change.
-            </p>
-          </div>
+        <div class="dock-actions">
+          <label class="dock-size-label" for="dock-size">Pane size</label>
+          <input
+            id="dock-size"
+            class="dock-size"
+            type="range"
+            min="0"
+            max="100"
+            value="34"
+            aria-label="Resize information pane"
+          >
+
+          <button
+            class="workspace-button workspace-button-small"
+            type="button"
+            id="dock-collapse"
+            aria-label="Collapse information pane"
+          >
+            &darr;
+          </button>
         </div>
+      </header>
 
-        <div class="row">
-          <div class="col-sm-12">
-            <button
-              type="button"
-              class="btn btn-danger btn-md btn-block btn-space"
-              id="switchModeButton"
-            >
-              <u>M</u>ove
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <button
-              type="button"
-              class="btn btn-primary btn-md btn-block btn-space"
-              id="countyModeButton"
-            >
-              Hide Counties
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <button
-              type="button"
-              class="btn btn-primary btn-md btn-block btn-space"
-              id="shareButton"
-            >
-              Share
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <form class="form-horizontal">
-              <div class="form-group">
-                <label class="col-sm-6 control-label" for="selectYear">
-                  Year:
-                </label>
-                <div class="col-sm-6">
-                  <select class="form-control" id="selectYear">
-                    <option value="2004">2004</option>
-                    <option value="2008">2008</option>
-                    <option value="2012">2012</option>
-                    <option value="2016i">2016 Income</option>
-                    <option value="2016">2016</option>
-                    <option value="2020">2020</option>
-                    <option value="2020s">2020 w/ New Populations</option>
-                    <option value="2024" selected>2024</option>
-                  </select>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12">
-        <h2>Details</h2>
-        <div class="table-responsive">
-          <table class="table table-striped" style="text-align: right;">
+      <div class="dock-content">
+        <section
+          class="dock-panel"
+          id="panel-details"
+          role="tabpanel"
+          aria-labelledby="tab-details"
+          tabindex="0"
+        >
+          <table class="table table-striped state-table" id="state-summary">
             <thead>
               <tr>
-                <th>State</th>
-                <th>Population</th>
-                <th>Electors</th>
-                <th>Democrat</th>
-                <th>GOP</th>
-                <th>Green</th>
-                <th>Libertarian</th>
-                <th id="unaffiliated-header">Kennedy</th>
-                <th>Other</th>
+                <th scope="col">State</th>
+                <th scope="col">Population</th>
+                <th scope="col">Electors</th>
+                <th scope="col">Democrat</th>
+                <th scope="col">GOP</th>
+                <th scope="col">Green</th>
+                <th scope="col">Libertarian</th>
+                <th scope="col" id="unaffiliated-header">Kennedy</th>
+                <th scope="col">Other</th>
               </tr>
             </thead>
             <tbody id="states"></tbody>
           </table>
-        </div>
-      </div>
-    </div>
+        </section>
 
-    <footer class="row">
-      <div class="col-sm-12">
-        <p>
-          Development fork:
-          <a href="https://github.com/ericsundberg/RedrawStates">Eric Sundberg / RedrawStates</a>.
-          Originally created by
-          <a href="https://github.com/khwilson/RedrawStates">Kevin Hayes Wilson and contributors</a>.
-          Data sources and acknowledgments are documented in the repository.
-        </p>
-        <p>
-          This is a hypothetical boundary simulator. Its data and simplified
-          calculations should not be treated as official election results.
-        </p>
+        <section
+          class="dock-panel dock-prose"
+          id="panel-instructions"
+          role="tabpanel"
+          aria-labelledby="tab-instructions"
+          tabindex="0"
+          hidden
+        >
+          <h2>Using the map</h2>
+          <p>
+            Click a county to select or deselect it. Select multiple counties
+            before choosing a destination state.
+          </p>
+          <p>
+            Click <strong>Move</strong>, then click a county in the state that
+            should receive the selection. The current map engine recalculates
+            state totals after the move.
+          </p>
+          <p>
+            Hold Q while moving the pointer over counties to select them, or
+            hold W to deselect them. M toggles move mode, and P switches the
+            details table between raw votes and percentages.
+          </p>
+          <p>
+            The map can be zoomed and panned. The information pane can be
+            resized using the divider or the pane-size control above it.
+          </p>
+          <p>
+            The current version supports moving counties between existing
+            states. Creating additional states and displaying geographic
+            metrics will be added through the new state model.
+          </p>
+        </section>
+
+        <section
+          class="dock-panel dock-prose"
+          id="panel-about"
+          role="tabpanel"
+          aria-labelledby="tab-about"
+          tabindex="0"
+          hidden
+        >
+          <h2>About this project</h2>
+          <p>
+            Redraw the States is an interactive tool for exploring hypothetical
+            state boundaries and their associated data.
+          </p>
+          <p>
+            This public development fork is maintained by Eric Sundberg.
+            The original project was created by Kevin Hayes Wilson and
+            contributors. Original authorship and Git history are preserved.
+          </p>
+          <p>
+            <a href="https://github.com/ericsundberg/RedrawStates">
+              View the development fork
+            </a>
+            &middot;
+            <a href="https://github.com/khwilson/RedrawStates">
+              View the original repository
+            </a>
+          </p>
+          <p id="legacy-model-note">
+            The inherited election calculations are simplified and the
+            available datasets have documented limitations. They should not
+            be treated as official election results. Data provenance and
+            modeling assumptions are being expanded as part of this fork.
+          </p>
+        </section>
       </div>
-    </footer>
+    </section>
+
+    <nav class="workspace-tabs" aria-label="Workspace navigation">
+      <div class="workspace-tab-list" role="tablist" aria-label="Information panes">
+        <button
+          class="workspace-tab"
+          id="tab-details"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-details"
+          tabindex="0"
+          data-panel="details"
+        >
+          Details
+        </button>
+
+        <button
+          class="workspace-tab"
+          id="tab-instructions"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-instructions"
+          tabindex="-1"
+          data-panel="instructions"
+        >
+          Instructions
+        </button>
+
+        <button
+          class="workspace-tab"
+          id="tab-about"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-about"
+          tabindex="-1"
+          data-panel="about"
+        >
+          About
+        </button>
+      </div>
+
+      <button
+        class="workspace-button workspace-dock-toggle"
+        type="button"
+        id="dock-toggle"
+        aria-controls="workspace-dock"
+        aria-expanded="true"
+      >
+        Hide pane
+      </button>
+    </nav>
   </main>
 
   <script src="js/d3.v7.min.js"></script>
   <script src="js/topojson.v3.min.js"></script>
   <script src="js/map.js"></script>
+  <script type="module" src="js/ui/workspace.mjs"></script>
 </body>
 </html>

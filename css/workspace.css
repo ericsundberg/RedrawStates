@@ -1,0 +1,587 @@
+:root {
+  --workspace-background: #f4f5f7;
+  --workspace-surface: #ffffff;
+  --workspace-text: #242a31;
+  --workspace-muted: #626b76;
+  --workspace-border: #d7dce2;
+  --workspace-control: #f1f3f6;
+  --workspace-selected: #e8eef8;
+  --workspace-accent: #315f9e;
+  --workspace-dock-height: clamp(160px, 34dvh, 390px);
+  --workspace-tab-height: 52px;
+  --workspace-splitter-height: 8px;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+.redraw-app {
+  display: grid;
+  grid-template-rows:
+    minmax(0, 1fr)
+    var(--workspace-splitter-height)
+    var(--workspace-dock-height)
+    var(--workspace-tab-height);
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--workspace-background);
+  color: var(--workspace-text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.redraw-app *,
+.redraw-app *::before,
+.redraw-app *::after {
+  box-sizing: border-box;
+}
+
+.redraw-app [hidden] {
+  display: none !important;
+}
+
+.redraw-app button:focus-visible,
+.redraw-app a:focus-visible,
+.redraw-app input:focus-visible,
+.redraw-app select:focus-visible,
+.redraw-app [tabindex]:focus-visible {
+  outline: 3px solid #315f9e;
+  outline-offset: 2px;
+}
+
+/* Main map workspace */
+
+.map-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 244px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--workspace-border);
+  background: var(--workspace-surface);
+}
+
+.map-stage.tools-hidden {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.map-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+  min-height: 47px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--workspace-border);
+}
+
+.map-toolbar-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.map-toolbar-heading strong {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.map-toolbar-subtitle {
+  color: var(--workspace-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.map-canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+#states-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  max-height: none;
+  touch-action: none;
+}
+
+.map-summary {
+  flex: 0 0 auto;
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--workspace-border);
+  background: var(--workspace-surface);
+}
+
+.summary-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.summary-caption {
+  color: var(--workspace-muted);
+  font-weight: 400;
+}
+
+/* Preserve the legacy electoral bar while fitting it into the shell. */
+
+.redraw-app .ev-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #e3e7ec;
+}
+
+.redraw-app .ev-bar::after {
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.redraw-app .ev-bar-dem-total,
+.redraw-app .ev-bar-gop-total {
+  position: relative;
+  z-index: 2;
+  float: none;
+  padding: 3px 8px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Map controls */
+
+.map-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  min-height: 0;
+  padding: 12px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--workspace-border);
+  background: var(--workspace-surface);
+}
+
+.tools-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.tools-heading strong {
+  font-size: 14px;
+}
+
+.tools-description {
+  margin: 0 0 6px;
+  color: var(--workspace-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.map-tools .btn {
+  margin: 0;
+  border-radius: 5px;
+}
+
+.tools-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.tools-field label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tools-help {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--workspace-border);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.tools-help p {
+  margin: 8px 0 0;
+  color: var(--workspace-muted);
+}
+
+/* Shared shell buttons */
+
+.workspace-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 5px 11px;
+  border: 1px solid var(--workspace-border);
+  border-radius: 5px;
+  background: var(--workspace-control);
+  color: var(--workspace-text);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.workspace-button:hover {
+  background: #e5e9ef;
+}
+
+.workspace-button-small {
+  min-width: 30px;
+  padding: 4px 8px;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+/* Resizable information dock */
+
+.dock-splitter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  background: #e8ebef;
+  cursor: row-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.dock-splitter:hover,
+.dock-splitter.is-dragging {
+  background: #d5dfed;
+}
+
+.splitter-grip {
+  width: 46px;
+  height: 3px;
+  border-radius: 3px;
+  background: #9aa5b2;
+}
+
+.workspace-dock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--workspace-surface);
+}
+
+.dock-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+  min-height: 45px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--workspace-border);
+}
+
+.dock-heading h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.dock-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dock-size-label {
+  margin: 0;
+  color: var(--workspace-muted);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.dock-size {
+  width: 130px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--workspace-accent);
+  cursor: pointer;
+}
+
+.dock-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dock-panel {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  background: var(--workspace-surface);
+}
+
+/* The same scrolling surface owns both table axes. */
+
+.state-table {
+  width: 100%;
+  min-width: 920px;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.state-table th,
+.state-table td {
+  padding: 7px 11px !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid #e2e5e9;
+  text-align: right;
+  vertical-align: middle !important;
+}
+
+.state-table th:first-child,
+.state-table td:first-child {
+  text-align: center;
+}
+
+.state-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #f1f3f6;
+  color: var(--workspace-text);
+  font-weight: 600;
+}
+
+.state-table tbody tr:hover {
+  background: #edf2f8;
+}
+
+.dock-prose {
+  padding: 18px 22px 30px;
+  line-height: 1.6;
+}
+
+.dock-prose h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.dock-prose p {
+  max-width: 850px;
+  margin: 0 0 13px;
+}
+
+/* Persistent bottom navigation */
+
+.workspace-tabs {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 10px;
+  border-top: 1px solid var(--workspace-border);
+  background: #e9edf2;
+}
+
+.workspace-tab-list {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.workspace-tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+.workspace-tab {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 94px;
+  padding: 0 16px;
+  border: 0;
+  border-top: 3px solid transparent;
+  background: transparent;
+  color: var(--workspace-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.workspace-tab:hover {
+  background: #dde4ed;
+  color: var(--workspace-text);
+}
+
+.workspace-tab[aria-selected="true"] {
+  border-top-color: var(--workspace-accent);
+  background: var(--workspace-surface);
+  color: var(--workspace-text);
+  font-weight: 600;
+}
+
+.workspace-dock-toggle {
+  align-self: center;
+  white-space: nowrap;
+}
+
+.redraw-app.is-dock-collapsed {
+  grid-template-rows:
+    minmax(0, 1fr)
+    0
+    0
+    var(--workspace-tab-height);
+}
+
+/* Narrow screens retain the map and use an overlay control drawer. */
+
+@media (max-width: 760px) {
+  .map-stage {
+    position: relative;
+    display: block;
+  }
+
+  .map-main {
+    height: 100%;
+  }
+
+  .map-tools {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    width: min(290px, 92%);
+    height: 100%;
+    border-left: 1px solid var(--workspace-border);
+    box-shadow: -4px 0 18px rgba(0, 0, 0, 0.1);
+  }
+
+  .map-toolbar-subtitle {
+    display: none;
+  }
+
+  .map-toolbar {
+    padding: 6px 10px;
+  }
+
+  .map-summary {
+    padding: 6px 10px 8px;
+  }
+
+  .summary-heading {
+    font-size: 11px;
+  }
+
+  .dock-heading {
+    padding: 7px 10px;
+  }
+
+  .dock-size-label {
+    display: none;
+  }
+
+  .dock-size {
+    width: 75px;
+  }
+
+  .workspace-tabs {
+    padding: 0 5px;
+    gap: 4px;
+  }
+
+  .workspace-tab {
+    min-width: 72px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .workspace-dock-toggle {
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  .dock-prose {
+    padding: 14px 16px 24px;
+  }
+}
+
+@media (max-height: 550px) {
+  .map-toolbar {
+    min-height: 38px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .map-summary {
+    padding-top: 4px;
+    padding-bottom: 5px;
+  }
+
+  .dock-heading {
+    min-height: 38px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
