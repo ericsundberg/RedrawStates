@@ -1,0 +1,294 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:six-californias",
+  "name": "Six Californias (2016 proposal)",
+  "description": "Tim Draper's six-region proposal pursued for the 2016 ballot. California's 58 counties are assigned to Jefferson, North California, Silicon Valley, Central California, West California, and South California. The original California state identity is removed.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:six-californias:jefferson",
+      "name": "Jefferson",
+      "abbreviation": "JEF",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:six-californias:north",
+      "name": "North California",
+      "abbreviation": "NCA",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:six-californias:silicon-valley",
+      "name": "Silicon Valley",
+      "abbreviation": "SV",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:six-californias:central",
+      "name": "Central California",
+      "abbreviation": "CCA",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:six-californias:west",
+      "name": "West California",
+      "abbreviation": "WCA",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:six-californias:south",
+      "name": "South California",
+      "abbreviation": "SCA",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "06007",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06011",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06015",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06021",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06023",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06033",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06035",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06045",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06049",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06063",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06089",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06093",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06103",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06105",
+      "custom:preset:six-californias:jefferson"
+    ],
+    [
+      "06005",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06017",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06041",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06055",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06057",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06061",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06067",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06091",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06095",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06097",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06101",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06113",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06115",
+      "custom:preset:six-californias:north"
+    ],
+    [
+      "06001",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06013",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06053",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06069",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06075",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06081",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06085",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06087",
+      "custom:preset:six-californias:silicon-valley"
+    ],
+    [
+      "06003",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06009",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06019",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06027",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06029",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06031",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06039",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06043",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06047",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06051",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06077",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06099",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06107",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06109",
+      "custom:preset:six-californias:central"
+    ],
+    [
+      "06037",
+      "custom:preset:six-californias:west"
+    ],
+    [
+      "06079",
+      "custom:preset:six-californias:west"
+    ],
+    [
+      "06083",
+      "custom:preset:six-californias:west"
+    ],
+    [
+      "06111",
+      "custom:preset:six-californias:west"
+    ],
+    [
+      "06025",
+      "custom:preset:six-californias:south"
+    ],
+    [
+      "06059",
+      "custom:preset:six-californias:south"
+    ],
+    [
+      "06065",
+      "custom:preset:six-californias:south"
+    ],
+    [
+      "06071",
+      "custom:preset:six-californias:south"
+    ],
+    [
+      "06073",
+      "custom:preset:six-californias:south"
+    ]
+  ],
+  "removeStates": [
+    {
+      "id": "state:CA",
+      "destinationId": "custom:preset:six-californias:west"
+    }
+  ],
+  "source": {
+    "title": "Six Californias, Initiative No. 13-0063",
+    "url": "https://oag.ca.gov/system/files/initiatives/pdfs/13-0063%20%2813-0063%20%28Six%20Californias%29%29.pdf"
+  }
+}

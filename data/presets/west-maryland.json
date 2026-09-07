@@ -1,0 +1,43 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:west-maryland",
+  "name": "West Maryland",
+  "description": "Garrett, Allegany, Washington, Frederick, and Carroll counties form West Maryland. Remaining Maryland counties are unchanged.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:west-maryland",
+      "name": "West Maryland",
+      "abbreviation": "WMD",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "24001",
+      "custom:preset:west-maryland"
+    ],
+    [
+      "24013",
+      "custom:preset:west-maryland"
+    ],
+    [
+      "24021",
+      "custom:preset:west-maryland"
+    ],
+    [
+      "24023",
+      "custom:preset:west-maryland"
+    ],
+    [
+      "24043",
+      "custom:preset:west-maryland"
+    ]
+  ],
+  "removeStates": []
+}

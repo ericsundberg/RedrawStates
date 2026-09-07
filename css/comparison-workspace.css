@@ -1,0 +1,168 @@
+/* Table identity columns */
+
+.state-table th:first-child,
+.state-table td:first-child {
+  min-width: 150px;
+  text-align: left;
+  padding-left: 14px;
+}
+
+.state-table th:nth-child(2),
+.state-table td:nth-child(2) {
+  min-width: 58px;
+}
+
+.state-table-code {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Electoral bar view control */
+
+.summary-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.electoral-view-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 0 auto;
+  font-size: 11px;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.electoral-view-control .form-control {
+  width: auto;
+  min-width: 105px;
+  height: 25px;
+  padding: 2px 22px 2px 8px;
+  font-size: 11px;
+}
+
+.summary-caption {
+  margin-left: 0;
+}
+
+/* Proportional state segments */
+
+#allocation-bar {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+#allocation-bar .allocation-segment {
+  min-width: 0;
+  flex-basis: 0;
+}
+
+.electoral-state-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 0;
+  color: #fff;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.electoral-state-segment:first-child {
+  border-left: 0;
+}
+
+.electoral-state-segment span {
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.electoral-state-segment:hover,
+.electoral-state-segment[aria-pressed="true"] {
+  filter: brightness(0.88);
+}
+
+.electoral-state-segment:focus-visible {
+  outline: 2px solid #172b4d;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.allocation-empty {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Compact state inspector */
+
+.electoral-state-inspector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  font-size: 11px;
+  color: #526273;
+}
+
+.electoral-state-inspector[hidden] {
+  display: none !important;
+}
+
+.electoral-state-inspector label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 11px;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.electoral-state-inspector .form-control {
+  width: 190px;
+  height: 25px;
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.electoral-state-detail {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .summary-heading {
+    flex-wrap: wrap;
+    gap: 5px 10px;
+  }
+
+  .electoral-view-control {
+    margin-left: auto;
+  }
+
+  .electoral-state-inspector {
+    flex-wrap: wrap;
+  }
+
+  .electoral-state-inspector .form-control {
+    width: min(190px, 45vw);
+  }
+
+  .electoral-state-detail {
+    width: 100%;
+  }
+}

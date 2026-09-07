@@ -1,0 +1,35 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:baja-arizona",
+  "name": "Baja Arizona",
+  "description": "Cochise, Pima, and Santa Cruz counties form Baja Arizona. All other Arizona counties remain unchanged.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:baja-arizona",
+      "name": "Baja Arizona",
+      "abbreviation": "BAZ",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "04003",
+      "custom:preset:baja-arizona"
+    ],
+    [
+      "04019",
+      "custom:preset:baja-arizona"
+    ],
+    [
+      "04023",
+      "custom:preset:baja-arizona"
+    ]
+  ],
+  "removeStates": []
+}

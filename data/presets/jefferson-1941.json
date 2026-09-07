@@ -1,0 +1,47 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:jefferson-1941",
+  "name": "Jefferson (1941 historical core)",
+  "description": "The five-county historical core of the 1941 Jefferson statehood movement: Curry County, Oregon, and Del Norte, Siskiyou, Modoc, and Trinity counties in California. This is not a larger modern revival proposal. Jackson, Josephine, Douglas, and other southwestern Oregon counties are not silently added.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:jefferson-1941",
+      "name": "Jefferson",
+      "abbreviation": "JFR",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "41015",
+      "custom:preset:jefferson-1941"
+    ],
+    [
+      "06015",
+      "custom:preset:jefferson-1941"
+    ],
+    [
+      "06049",
+      "custom:preset:jefferson-1941"
+    ],
+    [
+      "06093",
+      "custom:preset:jefferson-1941"
+    ],
+    [
+      "06105",
+      "custom:preset:jefferson-1941"
+    ]
+  ],
+  "removeStates": [],
+  "source": {
+    "title": "Oregon Encyclopedia — State of Jefferson",
+    "url": "https://www.oregonencyclopedia.org/articles/state_of_jefferson/"
+  }
+}

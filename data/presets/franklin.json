@@ -1,0 +1,75 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:franklin",
+  "name": "State of Franklin",
+  "description": "A modern-county interpretation of the historical State of Franklin, using the exact twelve Tennessee counties specified for this sandbox preset. All other Tennessee counties remain unchanged.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:franklin",
+      "name": "Franklin",
+      "abbreviation": "FRK",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "47009",
+      "custom:preset:franklin"
+    ],
+    [
+      "47019",
+      "custom:preset:franklin"
+    ],
+    [
+      "47029",
+      "custom:preset:franklin"
+    ],
+    [
+      "47059",
+      "custom:preset:franklin"
+    ],
+    [
+      "47063",
+      "custom:preset:franklin"
+    ],
+    [
+      "47073",
+      "custom:preset:franklin"
+    ],
+    [
+      "47089",
+      "custom:preset:franklin"
+    ],
+    [
+      "47091",
+      "custom:preset:franklin"
+    ],
+    [
+      "47155",
+      "custom:preset:franklin"
+    ],
+    [
+      "47163",
+      "custom:preset:franklin"
+    ],
+    [
+      "47171",
+      "custom:preset:franklin"
+    ],
+    [
+      "47179",
+      "custom:preset:franklin"
+    ]
+  ],
+  "removeStates": [],
+  "source": {
+    "title": "State of Franklin — Historical County Map",
+    "url": "https://commons.wikimedia.org/wiki/File:8FranklinCounties.png"
+  }
+}

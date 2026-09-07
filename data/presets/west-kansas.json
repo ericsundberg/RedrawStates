@@ -1,0 +1,91 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:west-kansas",
+  "name": "West Kansas",
+  "description": "The exact seventeen-county western Kansas arrangement requested for this sandbox. All other Kansas counties remain unchanged.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:west-kansas",
+      "name": "West Kansas",
+      "abbreviation": "WKS",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "20025",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20033",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20047",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20055",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20057",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20067",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20069",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20075",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20081",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20083",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20093",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20097",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20119",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20129",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20175",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20187",
+      "custom:preset:west-kansas"
+    ],
+    [
+      "20189",
+      "custom:preset:west-kansas"
+    ]
+  ],
+  "removeStates": []
+}

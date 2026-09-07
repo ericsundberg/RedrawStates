@@ -1,0 +1,43 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:plymouth-colony",
+  "name": "Plymouth Colony",
+  "description": "A hypothetical Plymouth state formed from Plymouth, Barnstable, and Bristol counties. Dukes and Nantucket counties are assigned to New York. All other counties remain unchanged.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:plymouth",
+      "name": "Plymouth",
+      "abbreviation": "PL",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "25023",
+      "custom:preset:plymouth"
+    ],
+    [
+      "25001",
+      "custom:preset:plymouth"
+    ],
+    [
+      "25005",
+      "custom:preset:plymouth"
+    ],
+    [
+      "25007",
+      "state:NY"
+    ],
+    [
+      "25019",
+      "state:NY"
+    ]
+  ],
+  "removeStates": []
+}

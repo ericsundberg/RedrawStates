@@ -9,9 +9,11 @@ import {
 } from "../map/map-metrics.mjs";
 
 const integerFormat = new Intl.NumberFormat("en-US");
+
 const decimalFormat = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
+
 const percentFormat = new Intl.NumberFormat("en-US", {
   style: "percent",
   minimumFractionDigits: 2,
@@ -24,6 +26,28 @@ function formatNumber(value, decimals = false) {
   return decimals
     ? decimalFormat.format(value)
     : integerFormat.format(value);
+}
+
+function totalRecordedVotes(votes) {
+  if (votes === null || votes === undefined) return null;
+
+  let total = 0;
+
+  for (const value of Object.values(votes)) {
+    if (
+      typeof value !== "number" ||
+      !Number.isSafeInteger(value) ||
+      value < 0
+    ) {
+      return null;
+    }
+
+    total += value;
+
+    if (!Number.isSafeInteger(total)) return null;
+  }
+
+  return total;
 }
 
 export function buildStateTableRows(snapshot, dataset, allocation) {
@@ -50,6 +74,7 @@ export function buildStateTableColumns(
   { areaUnit = "km2", voteFormat = "count" } = {}
 ) {
   const units = AREA_UNITS[areaUnit] ?? AREA_UNITS.km2;
+
   const incomeMode =
     dataset.metadata.measurement.kind === "income-weight";
 
@@ -57,6 +82,13 @@ export function buildStateTableColumns(
     {
       id: "state",
       label: "State",
+      type: "text",
+      value: (row) => row.state.name,
+      format: (value) => value,
+    },
+    {
+      id: "code",
+      label: "Code",
       type: "text",
       value: (row) => row.state.abbreviation,
       format: (value) => value,
@@ -119,13 +151,9 @@ export function buildStateTableColumns(
         const count = votes?.[field.id];
 
         if (count == null) return null;
-
         if (voteFormat !== "share") return count;
 
-        const totalVotes = Object.values(votes).reduce(
-          (sum, value) => sum + value,
-          0
-        );
+        const totalVotes = totalRecordedVotes(votes);
 
         return totalVotes > 0 ? count / totalVotes : null;
       },

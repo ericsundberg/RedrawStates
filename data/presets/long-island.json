@@ -1,0 +1,31 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:long-island",
+  "name": "Long Island",
+  "description": "Nassau and Suffolk counties form an independent hypothetical state. New York City counties remain in New York.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:long-island",
+      "name": "Long Island",
+      "abbreviation": "LI",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "36059",
+      "custom:preset:long-island"
+    ],
+    [
+      "36103",
+      "custom:preset:long-island"
+    ]
+  ],
+  "removeStates": []
+}

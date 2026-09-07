@@ -1,0 +1,88 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:greater-idaho-current",
+  "name": "Greater Idaho (current complete-county core)",
+  "description": "The complete-county core of the movement's published proposal: 14 Oregon counties and three Washington counties. Partial-county claims in Wasco, Jefferson, and Deschutes, Oregon, and the Waitsburg and Uniontown areas of Washington are excluded. Optional southwestern Oregon and California expansion areas are also excluded. The preset assigns territory to the existing Idaho identity and does not create a new state.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [],
+  "moves": [
+    [
+      "41001",
+      "state:ID"
+    ],
+    [
+      "41013",
+      "state:ID"
+    ],
+    [
+      "41021",
+      "state:ID"
+    ],
+    [
+      "41023",
+      "state:ID"
+    ],
+    [
+      "41025",
+      "state:ID"
+    ],
+    [
+      "41035",
+      "state:ID"
+    ],
+    [
+      "41037",
+      "state:ID"
+    ],
+    [
+      "41045",
+      "state:ID"
+    ],
+    [
+      "41049",
+      "state:ID"
+    ],
+    [
+      "41055",
+      "state:ID"
+    ],
+    [
+      "41059",
+      "state:ID"
+    ],
+    [
+      "41061",
+      "state:ID"
+    ],
+    [
+      "41063",
+      "state:ID"
+    ],
+    [
+      "41069",
+      "state:ID"
+    ],
+    [
+      "53003",
+      "state:ID"
+    ],
+    [
+      "53013",
+      "state:ID"
+    ],
+    [
+      "53023",
+      "state:ID"
+    ]
+  ],
+  "removeStates": [],
+  "source": {
+    "title": "Greater Idaho — Official FAQ",
+    "url": "https://www.greateridaho.org/faq"
+  }
+}

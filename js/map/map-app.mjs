@@ -26,9 +26,14 @@ import {
 import { createMapView } from "./map-view.mjs";
 import { createShareUrl, restoreShare } from "./map-share.mjs";
 import { mountMapDetails } from "../ui/map-details.mjs";
+
 import {
   mountStateManagementDialog,
 } from "../ui/state-management-dialog.mjs";
+
+import {
+  mountPresetLibrary,
+} from "../ui/preset-library.mjs";
 
 export function startMapApp() {
   const datasetCache = new Map();
@@ -97,7 +102,9 @@ export function startMapApp() {
         finishStateChange({
           type: "create",
           stateId: result.state.id,
-          message: `Created ${result.state.name}. Select counties to move into it.`,
+          message:
+            `Created ${result.state.name}. ` +
+            "Select counties to move into it.",
         });
       } catch (error) {
         ui.setStatus(error.message);
@@ -127,10 +134,45 @@ export function startMapApp() {
 
     onOpen() {
       holdKey = null;
+      presetView.close();
     },
 
     onChange(change) {
       finishStateChange(change);
+    },
+  });
+
+  const presetView = mountPresetLibrary({
+    getContext() {
+      return loading || !dataset || !session
+        ? null
+        : { dataset, session };
+    },
+
+    onOpen() {
+      holdKey = null;
+      managerView.close();
+    },
+
+    onApplied(plan) {
+      selected.clear();
+      setMode("pickup");
+
+      const states = session.getSnapshot().model.states;
+
+      if (
+        !states.some((state) => state.id === ui.getDestination())
+      ) {
+        ui.setDestination(states[0].id);
+      }
+
+      clearSharedAddress();
+      render();
+
+      ui.setStatus(
+        `Applied ${plan.applied.length} preset layers. ` +
+        `${plan.changedCountyCount} net county assignments changed.`
+      );
     },
   });
 
@@ -141,7 +183,9 @@ export function startMapApp() {
         if (!session || loading) return;
 
         if (mode === "dropoff") {
-          moveSelected(session.getSnapshot().model.assignments[countyId]);
+          moveSelected(
+            session.getSnapshot().model.assignments[countyId]
+          );
           return;
         }
 
@@ -185,8 +229,15 @@ export function startMapApp() {
       ? "Cancel <u>m</u>ove"
       : "<u>M</u>ove";
 
-    moveButton.classList.toggle("btn-warning", mode === "dropoff");
-    moveButton.classList.toggle("btn-danger", mode !== "dropoff");
+    moveButton.classList.toggle(
+      "btn-warning",
+      mode === "dropoff"
+    );
+
+    moveButton.classList.toggle(
+      "btn-danger",
+      mode !== "dropoff"
+    );
   }
 
   function setLevel(nextLevel) {
@@ -204,8 +255,10 @@ export function startMapApp() {
     if (!dataset) return;
 
     const url = new URL(window.location.href);
+
     url.search = "";
     url.searchParams.set("year", dataset.metadata.id);
+
     window.history.replaceState(null, "", url);
 
     const shareGroup = document.getElementById("shareGroup");
@@ -221,7 +274,9 @@ export function startMapApp() {
     const states = session.getSnapshot().model.states;
     const preferred = change.destinationId || change.stateId;
 
-    const destinationId = states.some((state) => state.id === preferred)
+    const destinationId = states.some(
+      (state) => state.id === preferred
+    )
       ? preferred
       : states[0].id;
 
@@ -261,6 +316,7 @@ export function startMapApp() {
 
     const snapshot = session.getSnapshot();
     const allocation = computeAllocation(snapshot, dataset);
+
     const allocationSummary = summarizeAllocation(
       snapshot,
       dataset,
@@ -281,6 +337,7 @@ export function startMapApp() {
     view.render(viewState);
     ui.render(viewState);
     managerView.refresh();
+    presetView.refresh();
 
     const incomeMode =
       dataset.metadata.measurement.kind === "income-weight";
@@ -307,6 +364,7 @@ export function startMapApp() {
   async function getDataset(datasetId) {
     if (!datasetCache.has(datasetId)) {
       const promise = loadDatasetWithAreas(datasetId);
+
       datasetCache.set(datasetId, promise);
 
       promise.catch(() => datasetCache.delete(datasetId));
@@ -315,16 +373,25 @@ export function startMapApp() {
     return datasetCache.get(datasetId);
   }
 
-  async function load(datasetId, { preserve = true, useUrl = false } = {}) {
+  async function load(
+    datasetId,
+    { preserve = true, useUrl = false } = {}
+  ) {
     const request = ++requestNumber;
+
     loading = true;
+    managerView.close();
+    presetView.close();
+
     ui.setBusy(true);
     managerView.setBusy(true);
+    presetView.setBusy(true);
     ui.setStatus("Loading dataset...");
 
     const previousDataset = dataset;
     const previousSession = session;
     const previousManager = stateManager;
+
     const previousModel = preserve && session
       ? session.getSnapshot().model
       : null;
@@ -362,11 +429,10 @@ export function startMapApp() {
         () => `custom:${crypto.randomUUID()}`
       );
 
-      managerView.close();
-
       dataset = nextDataset;
       session = nextSession;
       stateManager = nextManager;
+
       selected.clear();
       setMode("pickup");
 
@@ -392,14 +458,20 @@ export function startMapApp() {
         dataset = previousDataset;
         session = previousSession;
         stateManager = previousManager;
-        yearSelect.value = previousDataset?.metadata.id ?? "2024";
-        ui.setStatus(`Could not load dataset: ${error.message}`);
+
+        yearSelect.value =
+          previousDataset?.metadata.id ?? "2024";
+
+        ui.setStatus(
+          `Could not load dataset: ${error.message}`
+        );
       }
     } finally {
       if (request === requestNumber) {
         loading = false;
         ui.setBusy(false);
         managerView.setBusy(false);
+        presetView.setBusy(false);
       }
     }
   }
@@ -482,6 +554,7 @@ export function startMapApp() {
 
   shareGroup.classList.add("map-session-share");
   shareGroup.style.display = "none";
+
   shareButton.insertAdjacentElement("afterend", shareGroup);
 
   shareButton.addEventListener("click", () => {
