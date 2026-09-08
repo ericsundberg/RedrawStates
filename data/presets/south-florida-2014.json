@@ -1,0 +1,129 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:south-florida-2014",
+  "name": "South Florida (2014)",
+  "description": "The 24-county arrangement advocated by South Miami in Resolution 203-14-14297, adopted October 7, 2014. The remaining original Florida identity is renamed North Florida and retains its stable ID and FL abbreviation. Orange County is included; Volusia County is not.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "state:FL",
+      "name": "North Florida",
+      "abbreviation": "FL",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:south-florida",
+      "name": "South Florida",
+      "abbreviation": "SF",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "12009",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12011",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12015",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12021",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12027",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12043",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12049",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12051",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12055",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12057",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12061",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12071",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12081",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12085",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12086",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12087",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12093",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12095",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12097",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12099",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12103",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12105",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12111",
+      "custom:preset:south-florida"
+    ],
+    [
+      "12115",
+      "custom:preset:south-florida"
+    ]
+  ],
+  "removeStates": [],
+  "source": {
+    "title": "South Miami Resolution 203-14-14297",
+    "url": "https://desdemonadespair.net/2014/11/threatened-with-rising-sea-leve/"
+  }
+}

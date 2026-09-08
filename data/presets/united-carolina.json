@@ -1,0 +1,78 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:united-carolina",
+  "name": "United Carolina",
+  "description": "A hypothetical reunification of North and South Carolina, inspired by the former Province of Carolina. The original North Carolina identity is renamed Carolina and receives the abbreviation CR. All forty-six modern South Carolina counties are transferred into it, and the original South Carolina identity is removed.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "Province of Carolina",
+    "url": "https://en.wikipedia.org/wiki/Province_of_Carolina"
+  },
+  "states": [
+    {
+      "id": "state:NC",
+      "name": "Carolina",
+      "abbreviation": "CR",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["45001", "state:NC"],
+    ["45003", "state:NC"],
+    ["45005", "state:NC"],
+    ["45007", "state:NC"],
+    ["45009", "state:NC"],
+    ["45011", "state:NC"],
+    ["45013", "state:NC"],
+    ["45015", "state:NC"],
+    ["45017", "state:NC"],
+    ["45019", "state:NC"],
+    ["45021", "state:NC"],
+    ["45023", "state:NC"],
+    ["45025", "state:NC"],
+    ["45027", "state:NC"],
+    ["45029", "state:NC"],
+    ["45031", "state:NC"],
+    ["45033", "state:NC"],
+    ["45035", "state:NC"],
+    ["45037", "state:NC"],
+    ["45039", "state:NC"],
+    ["45041", "state:NC"],
+    ["45043", "state:NC"],
+    ["45045", "state:NC"],
+    ["45047", "state:NC"],
+    ["45049", "state:NC"],
+    ["45051", "state:NC"],
+    ["45053", "state:NC"],
+    ["45055", "state:NC"],
+    ["45057", "state:NC"],
+    ["45059", "state:NC"],
+    ["45061", "state:NC"],
+    ["45063", "state:NC"],
+    ["45065", "state:NC"],
+    ["45067", "state:NC"],
+    ["45069", "state:NC"],
+    ["45071", "state:NC"],
+    ["45073", "state:NC"],
+    ["45075", "state:NC"],
+    ["45077", "state:NC"],
+    ["45079", "state:NC"],
+    ["45081", "state:NC"],
+    ["45083", "state:NC"],
+    ["45085", "state:NC"],
+    ["45087", "state:NC"],
+    ["45089", "state:NC"],
+    ["45091", "state:NC"]
+  ],
+  "removeStates": [
+    {
+      "id": "state:SC",
+      "destinationId": "state:NC"
+    }
+  ]
+}

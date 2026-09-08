@@ -1,0 +1,39 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:chicagoland",
+  "name": "Chicagoland",
+  "description": "Lake, Cook, DuPage, and Will counties, Illinois. All other counties remain unchanged.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:chicagoland",
+      "name": "Chicagoland",
+      "abbreviation": "CH",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "17031",
+      "custom:preset:chicagoland"
+    ],
+    [
+      "17043",
+      "custom:preset:chicagoland"
+    ],
+    [
+      "17097",
+      "custom:preset:chicagoland"
+    ],
+    [
+      "17197",
+      "custom:preset:chicagoland"
+    ]
+  ],
+  "removeStates": []
+}

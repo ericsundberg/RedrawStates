@@ -1,0 +1,131 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:absaroka-1939",
+  "name": "Absaroka (1939 regional reconstruction)",
+  "description": "An editorial whole-county reconstruction of the 1939 Absaroka statehood movement in northern Wyoming, southeastern Montana, and western South Dakota. Historical boundaries changed and were not formally surveyed. This selection is not claimed to be an exact transcription of a particular 26-county version. The documented northern portion of Fremont County is omitted rather than moving all of Fremont. Review the historical map and adjust counties for a more specific interpretation.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:absaroka",
+      "name": "Absaroka",
+      "abbreviation": "AB",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "56003",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56005",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56011",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56017",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56019",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56029",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56033",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56039",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56043",
+      "custom:preset:absaroka"
+    ],
+    [
+      "56045",
+      "custom:preset:absaroka"
+    ],
+    [
+      "30003",
+      "custom:preset:absaroka"
+    ],
+    [
+      "30011",
+      "custom:preset:absaroka"
+    ],
+    [
+      "30017",
+      "custom:preset:absaroka"
+    ],
+    [
+      "30075",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46019",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46031",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46033",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46047",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46055",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46063",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46071",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46081",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46093",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46103",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46105",
+      "custom:preset:absaroka"
+    ],
+    [
+      "46137",
+      "custom:preset:absaroka"
+    ]
+  ],
+  "removeStates": [],
+  "source": {
+    "title": "Sheridan Press — Proposed Absaroka Map, March 5, 1939",
+    "url": "https://commons.wikimedia.org/wiki/File:Absaroka_map_from_contemporary_newspaper.jpg"
+  }
+}

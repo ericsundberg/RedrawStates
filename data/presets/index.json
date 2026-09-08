@@ -1,0 +1,118 @@
+{
+  "format": "redraw-states-preset-catalog",
+  "version": 1,
+  "presets": [
+    {
+      "id": "builtin:plymouth-colony",
+      "filename": "plymouth-colony.json"
+    },
+    {
+      "id": "builtin:six-californias",
+      "filename": "six-californias.json"
+    },
+    {
+      "id": "builtin:cal3-2018",
+      "filename": "cal3-2018.json"
+    },
+    {
+      "id": "builtin:british-west-florida-1764",
+      "filename": "british-west-florida-1764.json"
+    },
+    {
+      "id": "builtin:franklin",
+      "filename": "franklin.json"
+    },
+    {
+      "id": "builtin:absaroka-1939",
+      "filename": "absaroka-1939.json"
+    },
+    {
+      "id": "builtin:greater-idaho-current",
+      "filename": "greater-idaho-current.json"
+    },
+    {
+      "id": "builtin:south-florida-2014",
+      "filename": "south-florida-2014.json"
+    },
+    {
+      "id": "builtin:jefferson-1941",
+      "filename": "jefferson-1941.json"
+    },
+    {
+      "id": "builtin:chicagoland",
+      "filename": "chicagoland.json"
+    },
+    {
+      "id": "builtin:superior",
+      "filename": "superior.json"
+    },
+    {
+      "id": "builtin:long-island",
+      "filename": "long-island.json"
+    },
+    {
+      "id": "builtin:baja-arizona",
+      "filename": "baja-arizona.json"
+    },
+    {
+      "id": "builtin:west-kansas",
+      "filename": "west-kansas.json"
+    },
+    {
+      "id": "builtin:south-georgia",
+      "filename": "south-georgia.json"
+    },
+    {
+      "id": "builtin:wisconsin-reattachment",
+      "filename": "wisconsin-reattachment.json"
+    },
+    {
+      "id": "builtin:madawaska",
+      "filename": "madawaska.json"
+    },
+    {
+      "id": "builtin:wetsylvania",
+      "filename": "wetsylvania.json"
+    },
+    {
+      "id": "builtin:west-maryland",
+      "filename": "west-maryland.json"
+    },
+    {
+      "id": "builtin:new-york-vermont-claims",
+      "filename": "new-york-vermont-claims.json"
+    },
+    {
+      "id": "builtin:united-carolina",
+      "filename": "united-carolina.json"
+    },
+    {
+      "id": "builtin:north-colorado-2013",
+      "filename": "north-colorado-2013.json"
+    },
+    {
+      "id": "builtin:jones-county-1861",
+      "filename": "jones-county-1861.json"
+    },
+    {
+      "id": "builtin:callaway-kingdom",
+      "filename": "callaway-kingdom.json"
+    },
+    {
+      "id": "builtin:mcdonald-territory",
+      "filename": "mcdonald-territory.json"
+    },
+    {
+      "id": "builtin:state-of-scott",
+      "filename": "state-of-scott.json"
+    },
+    {
+      "id": "builtin:state-of-winston",
+      "filename": "state-of-winston.json"
+    },
+    {
+      "id": "builtin:northern-virginia",
+      "filename": "northern-virginia.json"
+    }
+  ]
+}

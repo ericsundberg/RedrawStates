@@ -1,0 +1,36 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:northern-virginia",
+  "name": "Northern Virginia",
+  "description": "A hypothetical Northern Virginia state using the nine county-equivalent jurisdictions of Virginia's Region Seven and the Northern Virginia Regional Commission's core service area. The preset includes Arlington, Fairfax, Loudoun, and Prince William counties and the independent cities of Alexandria, Fairfax, Falls Church, Manassas, and Manassas Park. Incorporated towns are included within their parent counties. This is a regional reconstruction, not an assertion of a formally adopted statehood boundary.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "Virginia Region Seven",
+    "url": "https://www.dhcd.virginia.gov/region-seven"
+  },
+  "states": [
+    {
+      "id": "custom:preset:northern-virginia",
+      "name": "Northern Virginia",
+      "abbreviation": "VN",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["51013", "custom:preset:northern-virginia"],
+    ["51059", "custom:preset:northern-virginia"],
+    ["51107", "custom:preset:northern-virginia"],
+    ["51153", "custom:preset:northern-virginia"],
+    ["51510", "custom:preset:northern-virginia"],
+    ["51600", "custom:preset:northern-virginia"],
+    ["51610", "custom:preset:northern-virginia"],
+    ["51683", "custom:preset:northern-virginia"],
+    ["51685", "custom:preset:northern-virginia"]
+  ],
+  "removeStates": []
+}

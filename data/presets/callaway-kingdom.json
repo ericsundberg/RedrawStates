@@ -1,0 +1,28 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:callaway-kingdom",
+  "name": "Kingdom of Callaway",
+  "description": "A hypothetical single-county state inspired by the Kingdom of Callaway, a Civil War-era episode in Missouri. The preset separates modern Callaway County and does not imply that the kingdom was a formally recognized sovereign state.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "Kingdom of Callaway",
+    "url": "https://en.wikipedia.org/wiki/Kingdom_of_Callaway"
+  },
+  "states": [
+    {
+      "id": "custom:preset:callaway-kingdom",
+      "name": "Callaway",
+      "abbreviation": "CL",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["29027", "custom:preset:callaway-kingdom"]
+  ],
+  "removeStates": []
+}

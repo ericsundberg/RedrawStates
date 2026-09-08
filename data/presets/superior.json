@@ -1,0 +1,83 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:superior",
+  "name": "Superior",
+  "description": "The 15 counties of Michigan's Upper Peninsula. No northern Lower Peninsula, Wisconsin, or Minnesota counties are included.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:superior",
+      "name": "Superior",
+      "abbreviation": "SU",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "26003",
+      "custom:preset:superior"
+    ],
+    [
+      "26013",
+      "custom:preset:superior"
+    ],
+    [
+      "26033",
+      "custom:preset:superior"
+    ],
+    [
+      "26041",
+      "custom:preset:superior"
+    ],
+    [
+      "26043",
+      "custom:preset:superior"
+    ],
+    [
+      "26053",
+      "custom:preset:superior"
+    ],
+    [
+      "26061",
+      "custom:preset:superior"
+    ],
+    [
+      "26071",
+      "custom:preset:superior"
+    ],
+    [
+      "26083",
+      "custom:preset:superior"
+    ],
+    [
+      "26095",
+      "custom:preset:superior"
+    ],
+    [
+      "26097",
+      "custom:preset:superior"
+    ],
+    [
+      "26103",
+      "custom:preset:superior"
+    ],
+    [
+      "26109",
+      "custom:preset:superior"
+    ],
+    [
+      "26131",
+      "custom:preset:superior"
+    ],
+    [
+      "26153",
+      "custom:preset:superior"
+    ]
+  ],
+  "removeStates": []
+}

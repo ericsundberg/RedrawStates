@@ -1,0 +1,276 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:cal3-2018",
+  "name": "Cal 3 (2018)",
+  "description": "The final 2018 three-state initiative: Northern California (40 counties), California (six), and Southern California (12). The original California identity is replaced by three distinct hypothetical identities. Custom abbreviations distinguish this preset from Six Californias. The measure was removed from the ballot.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "states": [
+    {
+      "id": "custom:preset:cal3:north",
+      "name": "Northern California",
+      "abbreviation": "NL",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:cal3:california",
+      "name": "California",
+      "abbreviation": "CM",
+      "kind": "state"
+    },
+    {
+      "id": "custom:preset:cal3:south",
+      "name": "Southern California",
+      "abbreviation": "SL",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    [
+      "06001",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06003",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06005",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06007",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06009",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06011",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06013",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06015",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06017",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06021",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06023",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06033",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06035",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06041",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06043",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06045",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06047",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06049",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06055",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06057",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06061",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06063",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06067",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06075",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06077",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06081",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06085",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06087",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06089",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06091",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06093",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06095",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06097",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06099",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06101",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06103",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06105",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06109",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06113",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06115",
+      "custom:preset:cal3:north"
+    ],
+    [
+      "06037",
+      "custom:preset:cal3:california"
+    ],
+    [
+      "06053",
+      "custom:preset:cal3:california"
+    ],
+    [
+      "06069",
+      "custom:preset:cal3:california"
+    ],
+    [
+      "06079",
+      "custom:preset:cal3:california"
+    ],
+    [
+      "06083",
+      "custom:preset:cal3:california"
+    ],
+    [
+      "06111",
+      "custom:preset:cal3:california"
+    ],
+    [
+      "06019",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06025",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06027",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06029",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06031",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06039",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06051",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06059",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06065",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06071",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06073",
+      "custom:preset:cal3:south"
+    ],
+    [
+      "06107",
+      "custom:preset:cal3:south"
+    ]
+  ],
+  "removeStates": [
+    {
+      "id": "state:CA",
+      "destinationId": "custom:preset:cal3:north"
+    }
+  ],
+  "source": {
+    "title": "California Secretary of State — Cal 3",
+    "url": "https://www.sos.ca.gov/administration/news-releases-and-advisories/2018-news-releases-and-advisories/new-measure-eligible-californias-november-2018-ballot-division-california-three-states-initiative-statute"
+  }
+}
