@@ -13,13 +13,13 @@
     {
       "id": "custom:preset:six-californias:jefferson",
       "name": "Jefferson",
-      "abbreviation": "JEF",
+      "abbreviation": "JF",
       "kind": "state"
     },
     {
       "id": "custom:preset:six-californias:north",
       "name": "North California",
-      "abbreviation": "NCA",
+      "abbreviation": "CN",
       "kind": "state"
     },
     {
@@ -31,19 +31,19 @@
     {
       "id": "custom:preset:six-californias:central",
       "name": "Central California",
-      "abbreviation": "CCA",
+      "abbreviation": "CC",
       "kind": "state"
     },
     {
       "id": "custom:preset:six-californias:west",
       "name": "West California",
-      "abbreviation": "WCA",
+      "abbreviation": "CW",
       "kind": "state"
     },
     {
       "id": "custom:preset:six-californias:south",
       "name": "South California",
-      "abbreviation": "SCA",
+      "abbreviation": "CS",
       "kind": "state"
     }
   ],

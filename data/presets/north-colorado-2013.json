@@ -1,0 +1,38 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:north-colorado-2013",
+  "name": "North Colorado (2013)",
+  "description": "A modern-county reconstruction of the 2013 North Colorado statehood proposal. The proposed state contains Weld, Morgan, Logan, Sedgwick, Phillips, Yuma, Washington, Elbert, Lincoln, Kit Carson, and Cheyenne counties. All other Colorado counties retain their original assignments.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "North Colorado",
+    "url": "https://en.wikipedia.org/wiki/North_Colorado"
+  },
+  "states": [
+    {
+      "id": "custom:preset:north-colorado-2013",
+      "name": "North Colorado",
+      "abbreviation": "NO",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["08017", "custom:preset:north-colorado-2013"],
+    ["08039", "custom:preset:north-colorado-2013"],
+    ["08063", "custom:preset:north-colorado-2013"],
+    ["08073", "custom:preset:north-colorado-2013"],
+    ["08075", "custom:preset:north-colorado-2013"],
+    ["08087", "custom:preset:north-colorado-2013"],
+    ["08095", "custom:preset:north-colorado-2013"],
+    ["08115", "custom:preset:north-colorado-2013"],
+    ["08121", "custom:preset:north-colorado-2013"],
+    ["08123", "custom:preset:north-colorado-2013"],
+    ["08125", "custom:preset:north-colorado-2013"]
+  ],
+  "removeStates": []
+}

@@ -77,6 +77,42 @@
     {
       "id": "builtin:west-maryland",
       "filename": "west-maryland.json"
+    },
+    {
+      "id": "builtin:new-york-vermont-claims",
+      "filename": "new-york-vermont-claims.json"
+    },
+    {
+      "id": "builtin:united-carolina",
+      "filename": "united-carolina.json"
+    },
+    {
+      "id": "builtin:north-colorado-2013",
+      "filename": "north-colorado-2013.json"
+    },
+    {
+      "id": "builtin:jones-county-1861",
+      "filename": "jones-county-1861.json"
+    },
+    {
+      "id": "builtin:callaway-kingdom",
+      "filename": "callaway-kingdom.json"
+    },
+    {
+      "id": "builtin:mcdonald-territory",
+      "filename": "mcdonald-territory.json"
+    },
+    {
+      "id": "builtin:state-of-scott",
+      "filename": "state-of-scott.json"
+    },
+    {
+      "id": "builtin:state-of-winston",
+      "filename": "state-of-winston.json"
+    },
+    {
+      "id": "builtin:northern-virginia",
+      "filename": "northern-virginia.json"
     }
   ]
 }

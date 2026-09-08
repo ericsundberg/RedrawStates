@@ -13,19 +13,19 @@
     {
       "id": "custom:preset:cal3:north",
       "name": "Northern California",
-      "abbreviation": "NC3",
+      "abbreviation": "NL",
       "kind": "state"
     },
     {
       "id": "custom:preset:cal3:california",
       "name": "California",
-      "abbreviation": "CA3",
+      "abbreviation": "CM",
       "kind": "state"
     },
     {
       "id": "custom:preset:cal3:south",
       "name": "Southern California",
-      "abbreviation": "SC3",
+      "abbreviation": "SL",
       "kind": "state"
     }
   ],

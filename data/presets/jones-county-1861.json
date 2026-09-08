@@ -1,0 +1,28 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:jones-county-1861",
+  "name": "Jones County (1861–65)",
+  "description": "A hypothetical state based on the Civil War-era Free State of Jones in Mississippi. Modern Jones County is separated as a single-county state. The name references a Unionist rebellion and its contested history; it does not imply that an independent state was formally recognized.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "Free State of Jones",
+    "url": "https://en.wikipedia.org/wiki/Free_State_of_Jones"
+  },
+  "states": [
+    {
+      "id": "custom:preset:jones-county-1861",
+      "name": "Jones",
+      "abbreviation": "JO",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["28067", "custom:preset:jones-county-1861"]
+  ],
+  "removeStates": []
+}

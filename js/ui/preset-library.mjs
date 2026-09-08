@@ -1,15 +1,19 @@
 /**
- * Local preset library and ordered, transactional load stack.
+ * JSON-backed preset library and ordered load stack.
+ *
+ * Built-in and imported presets use the same schema and instantiator.
+ * No preset-specific JavaScript factories are used by this module.
  */
 
-import { createBuiltinPresets } from "../presets/builtin-presets.mjs";
+import {
+  loadPresetCatalog,
+} from "../presets/preset-catalog.mjs";
 
 import {
   applyPresetPlan,
   createPresetBundle,
   createPresetFromModel,
   createPresetPlan,
-  normalizePreset,
   readPresetDocument,
 } from "../presets/preset-model.mjs";
 
@@ -30,6 +34,21 @@ function element(tag, className, text) {
 
 function newKey() {
   return crypto.randomUUID();
+}
+
+async function readJson(path) {
+  const response = await fetch(path, {
+    credentials: "same-origin",
+    cache: "no-cache",
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Could not load ${path}: HTTP ${response.status}.`
+    );
+  }
+
+  return response.json();
 }
 
 export function mountPresetLibrary({
@@ -83,6 +102,9 @@ export function mountPresetLibrary({
           <button type="button" class="btn btn-default" id="presets-add">
             Add to stack
           </button>
+          <button type="button" class="btn btn-default" id="presets-reload">
+            Reload
+          </button>
         </div>
         <p id="presets-description" class="preset-library-note"></p>
         <div id="presets-source" class="preset-library-source"></div>
@@ -125,8 +147,8 @@ export function mountPresetLibrary({
       <section>
         <h3>Save current configuration</h3>
         <p class="preset-library-note">
-          Downloads the changes from the original configuration, not
-          a complete national assignment table. No data is sent to a server.
+          Downloads changes from the original configuration, not a
+          complete national assignment table. No data is sent to a server.
         </p>
         <label for="presets-name">Preset name</label>
         <input class="form-control" id="presets-name"
@@ -145,43 +167,61 @@ export function mountPresetLibrary({
 
   document.body.append(dialog);
 
-  const catalogSelect = dialog.querySelector("#presets-catalog");
-  const catalogDescription = dialog.querySelector("#presets-description");
-  const sourceContainer = dialog.querySelector("#presets-source");
-  const queueContainer = dialog.querySelector("#presets-queue");
-  const baseSelect = dialog.querySelector("#presets-base");
-  const review = dialog.querySelector("#presets-review");
-  const applyButton = dialog.querySelector("#presets-apply");
-  const status = dialog.querySelector("#presets-status");
-  const nameInput = dialog.querySelector("#presets-name");
-  const descriptionInput = dialog.querySelector(
-    "#presets-description-input"
-  );
-  const importInput = dialog.querySelector("#presets-import");
+  const find = (selector) => dialog.querySelector(selector);
+
+  const catalogSelect = find("#presets-catalog");
+  const catalogDescription = find("#presets-description");
+  const sourceContainer = find("#presets-source");
+  const queueContainer = find("#presets-queue");
+  const baseSelect = find("#presets-base");
+  const review = find("#presets-review");
+  const applyButton = find("#presets-apply");
+  const status = find("#presets-status");
+  const nameInput = find("#presets-name");
+  const descriptionInput = find("#presets-description-input");
+  const importInput = find("#presets-import");
 
   let catalog = [];
   let importedDocuments = [];
   let queue = [];
   let plan = null;
   let planContext = null;
-  let catalogDataset = null;
+  let loadedDataset = null;
+  let loadingDataset = null;
+  let generation = 0;
+  let queueVersion = 0;
+  let reviewedQueueVersion = null;
   let busy = false;
+  let loading = false;
   let importing = false;
+  let destroyed = false;
 
   function context() {
-    return getContext();
+    return destroyed ? null : getContext();
   }
 
   function message(value) {
     status.textContent = value;
   }
 
+  function locked() {
+    return busy || loading || importing;
+  }
+
   function invalidate() {
     plan = null;
     planContext = null;
+    reviewedQueueVersion = null;
     applyButton.disabled = true;
     review.hidden = true;
     review.replaceChildren();
+  }
+
+  function changedQueue() {
+    queueVersion += 1;
+    invalidate();
+    renderQueue();
+    syncControls();
   }
 
   function catalogItem(preset, origin) {
@@ -190,6 +230,38 @@ export function mountPresetLibrary({
       preset,
       origin,
     };
+  }
+
+  function syncControls() {
+    const disabled = locked();
+    const selected = catalog.some(
+      (item) => item.key === catalogSelect.value
+    );
+
+    for (const control of dialog.querySelectorAll(
+      "button, input, select, textarea"
+    )) {
+      if (control.id !== "presets-close") {
+        control.disabled = disabled;
+      }
+    }
+
+    find("#presets-close").disabled = busy;
+    find("#presets-add").disabled = disabled || !selected;
+    find("#presets-preview").disabled =
+      disabled || queue.length === 0;
+    find("#presets-download-stack").disabled =
+      disabled || queue.length === 0;
+    find("#presets-clear").disabled =
+      disabled || queue.length === 0;
+    applyButton.disabled = disabled || !plan;
+
+    for (const button of queueContainer.querySelectorAll(
+      "button[data-queue-action]"
+    )) {
+      button.disabled =
+        disabled || button.dataset.queueDisabled === "true";
+    }
   }
 
   function renderCatalog() {
@@ -215,9 +287,6 @@ export function mountPresetLibrary({
       (item) => item.key === catalogSelect.value
     );
 
-    dialog.querySelector("#presets-add").disabled =
-      busy || importing || !selected;
-
     catalogDescription.textContent =
       selected?.preset.description ?? "";
 
@@ -236,6 +305,8 @@ export function mountPresetLibrary({
 
       sourceContainer.append(link);
     }
+
+    syncControls();
   }
 
   function renderQueue() {
@@ -259,9 +330,7 @@ export function mountPresetLibrary({
         element(
           "span",
           null,
-          index === 0
-            ? "Highest priority · loads last"
-            : ""
+          index === 0 ? "Highest priority · loads last" : ""
         )
       );
 
@@ -275,27 +344,28 @@ export function mountPresetLibrary({
         ["↓", "Move lower priority", 1],
       ]) {
         const button = element("button", "btn btn-default", symbol);
+        const target = index + change;
 
         button.type = "button";
         button.title = title;
+        button.dataset.queueAction = "move";
+        button.dataset.queueDisabled = String(
+          target < 0 || target >= queue.length
+        );
         button.setAttribute(
           "aria-label",
           `${title}: ${entry.preset.name}`
         );
 
-        const target = index + change;
-
-        button.disabled =
-          busy || target < 0 || target >= queue.length;
-
         button.addEventListener("click", () => {
+          if (locked()) return;
+
           const next = [...queue];
 
           [next[index], next[target]] = [next[target], next[index]];
 
           queue = next;
-          invalidate();
-          renderQueue();
+          changedQueue();
         });
 
         controls.append(button);
@@ -304,22 +374,26 @@ export function mountPresetLibrary({
       const remove = element("button", "btn btn-default", "Remove");
 
       remove.type = "button";
-      remove.disabled = busy;
+      remove.dataset.queueAction = "remove";
+      remove.dataset.queueDisabled = "false";
       remove.setAttribute(
         "aria-label",
         `Remove ${entry.preset.name} from the stack`
       );
 
       remove.addEventListener("click", () => {
+        if (locked()) return;
+
         queue = queue.filter((item) => item.key !== entry.key);
-        invalidate();
-        renderQueue();
+        changedQueue();
       });
 
       controls.append(remove);
       row.append(label, controls);
       queueContainer.append(row);
     });
+
+    syncControls();
   }
 
   function addToQueue(preset) {
@@ -332,46 +406,97 @@ export function mountPresetLibrary({
       preset,
     });
 
-    invalidate();
-    renderQueue();
+    changedQueue();
   }
 
-  function initialize() {
-    const current = context();
-
-    if (!current || current.dataset === catalogDataset) {
+  /**
+   * Load the manifest and every built-in JSON document.
+   * Imported files remain in memory across compatible dataset changes.
+   */
+  async function initialize(dataset, force = false) {
+    if (!force && loadedDataset === dataset && !loading) {
       return;
     }
 
-    catalogDataset = current.dataset;
+    if (!force && loading && loadingDataset === dataset) {
+      return;
+    }
+
+    const token = ++generation;
+
+    loading = true;
+    loadingDataset = dataset;
+    loadedDataset = null;
     catalog = [];
     queue = [];
-    invalidate();
+    changedQueue();
+    renderCatalog();
+    message("Loading built-in JSON presets...");
 
     try {
-      for (const preset of createBuiltinPresets(current.dataset)) {
-        catalog.push(catalogItem(preset, "Built-in"));
+      const builtins = await loadPresetCatalog(
+        dataset,
+        readJson
+      );
+
+      if (
+        token !== generation ||
+        context()?.dataset !== dataset
+      ) {
+        return;
       }
-    } catch (error) {
-      message(`Built-in presets unavailable: ${error.message}`);
-    }
 
-    // Preserve imported documents in memory, but only display compatible
-    // ones for the current dataset. Nothing is applied automatically.
-    for (const raw of importedDocuments) {
-      try {
-        const presets = readPresetDocument(raw, current.dataset);
+      const nextCatalog = builtins.map(
+        (preset) => catalogItem(preset, "Built-in")
+      );
 
-        for (const preset of presets) {
-          catalog.push(catalogItem(preset, "Local file"));
+      let incompatibleImports = 0;
+
+      for (const raw of importedDocuments) {
+        try {
+          const presets = readPresetDocument(raw, dataset);
+
+          for (const preset of presets) {
+            nextCatalog.push(
+              catalogItem(preset, "Local file")
+            );
+          }
+        } catch {
+          incompatibleImports += 1;
         }
-      } catch {
-        // The file remains in memory for a compatible dataset.
+      }
+
+      catalog = nextCatalog;
+      loadedDataset = dataset;
+
+      renderCatalog();
+
+      message(
+        `Loaded ${builtins.length} built-in presets.` +
+        (
+          incompatibleImports > 0
+            ? ` ${incompatibleImports} imported documents are ` +
+              "unavailable for this dataset."
+            : ""
+        )
+      );
+    } catch (error) {
+      if (token !== generation) return;
+
+      loadedDataset = dataset;
+
+      message(
+        `Built-in presets could not be loaded: ${error.message}`
+      );
+    } finally {
+      if (token === generation) {
+        loading = false;
+        loadingDataset = null;
+        renderCatalog();
+        renderQueue();
+        syncControls();
       }
     }
-
-    renderCatalog();
-    renderQueue();
   }
 
   function showReview(nextPlan) {
@@ -401,10 +526,8 @@ export function mountPresetLibrary({
         null,
         `${nextPlan.conflicts.length} assignment overrides`
       );
-
       const list = element("div", "preset-library-conflicts");
 
-      // Keep the dialog responsive even for unusually large mod stacks.
       for (const conflict of nextPlan.conflicts.slice(0, 200)) {
         list.append(element(
           "div",
@@ -437,7 +560,17 @@ export function mountPresetLibrary({
 
   catalogSelect.addEventListener("change", renderCatalog);
 
-  dialog.querySelector("#presets-add").addEventListener("click", () => {
+  find("#presets-reload").addEventListener("click", () => {
+    const current = context();
+
+    if (current && !locked()) {
+      initialize(current.dataset, true);
+    }
+  });
+
+  find("#presets-add").addEventListener("click", () => {
+    if (locked()) return;
+
     const item = catalog.find(
       (candidate) => candidate.key === catalogSelect.value
     );
@@ -454,61 +587,54 @@ export function mountPresetLibrary({
 
   baseSelect.addEventListener("change", invalidate);
 
-  dialog.querySelector("#presets-preview").addEventListener(
-    "click",
-    () => {
-      const current = context();
+  find("#presets-preview").addEventListener("click", () => {
+    const current = context();
 
-      if (!current) return;
+    if (!current || locked()) return;
 
-      try {
-        const nextPlan = createPresetPlan(
-          current.dataset,
-          current.session.getSnapshot(),
-          queue,
-          { base: baseSelect.value }
-        );
+    try {
+      const nextPlan = createPresetPlan(
+        current.dataset,
+        current.session.getSnapshot(),
+        queue,
+        { base: baseSelect.value }
+      );
 
-        plan = nextPlan;
-        planContext = current;
-        showReview(nextPlan);
-        applyButton.disabled = false;
+      plan = nextPlan;
+      planContext = current;
+      reviewedQueueVersion = queueVersion;
 
-        message(
-          "Review the result and any overrides before applying."
-        );
-      } catch (error) {
-        invalidate();
-        message(error.message);
-      }
+      showReview(nextPlan);
+      syncControls();
+
+      message("Review the result and any overrides before applying.");
+    } catch (error) {
+      invalidate();
+      message(error.message);
     }
-  );
+  });
 
   applyButton.addEventListener("click", () => {
     const current = context();
 
     if (
       !current ||
+      locked() ||
       !plan ||
       current.session !== planContext?.session ||
-      current.dataset !== planContext?.dataset
+      current.dataset !== planContext?.dataset ||
+      current.session.getSnapshot() !== plan.snapshot ||
+      reviewedQueueVersion !== queueVersion ||
+      baseSelect.value !== plan.base
     ) {
       invalidate();
-      message("Review the stack again before applying.");
-      return;
-    }
-
-    if (
-      current.session.getSnapshot() !== plan.snapshot
-    ) {
-      invalidate();
-      message("The configuration changed. Review the stack again.");
+      message("The stack or configuration changed. Review it again.");
       return;
     }
 
     if (!window.confirm(
       `Apply ${plan.applied.length} preset layers to the ` +
-      `${baseSelect.value === "original" ? "original" : "current"} ` +
+      `${plan.base === "original" ? "original" : "current"} ` +
       "configuration? The current arrangement will be replaced."
     )) {
       return;
@@ -529,85 +655,73 @@ export function mountPresetLibrary({
     }
   });
 
-  dialog.querySelector("#presets-download-stack").addEventListener(
-    "click",
-    () => {
-      if (queue.length === 0) {
-        message("Add at least one preset to the stack first.");
-        return;
+  find("#presets-download-stack").addEventListener("click", () => {
+    if (locked() || queue.length === 0) return;
+
+    const name = nameInput.value.trim() || "Preset stack";
+
+    const bundle = createPresetBundle(
+      queue.map((entry) => entry.preset),
+      {
+        id: `local:${newKey()}`,
+        name,
+        description: descriptionInput.value.trim(),
       }
+    );
 
-      const name = nameInput.value.trim() || "Preset stack";
+    downloadPresetJson(bundle, presetFilename(name));
+    message("Stack JSON download requested.");
+  });
 
-      const bundle = createPresetBundle(
-        queue.map((entry) => entry.preset),
+  find("#presets-clear").addEventListener("click", () => {
+    if (locked()) return;
+
+    queue = [];
+    changedQueue();
+    message("The load stack has been cleared.");
+  });
+
+  find("#presets-save").addEventListener("click", () => {
+    const current = context();
+
+    if (!current || locked()) return;
+
+    try {
+      const preset = createPresetFromModel(
+        current.dataset,
+        current.session.getSnapshot().model,
         {
           id: `local:${newKey()}`,
-          name,
-          description: descriptionInput.value.trim(),
+          name: nameInput.value,
+          description: descriptionInput.value,
         }
       );
 
-      downloadPresetJson(bundle, presetFilename(name));
-      message("Stack JSON download requested.");
+      downloadPresetJson(
+        preset,
+        presetFilename(preset.name)
+      );
+
+      importedDocuments.push(preset);
+      catalog.push(catalogItem(preset, "Local file"));
+      renderCatalog();
+
+      message(
+        "Preset JSON download requested. A copy is also available " +
+        "in this browser session's library."
+      );
+    } catch (error) {
+      message(error.message);
     }
-  );
-
-  dialog.querySelector("#presets-clear").addEventListener(
-    "click",
-    () => {
-      queue = [];
-      invalidate();
-      renderQueue();
-      message("The load stack has been cleared.");
-    }
-  );
-
-  dialog.querySelector("#presets-save").addEventListener(
-    "click",
-    () => {
-      const current = context();
-
-      if (!current) return;
-
-      try {
-        const preset = createPresetFromModel(
-          current.dataset,
-          current.session.getSnapshot().model,
-          {
-            id: `local:${newKey()}`,
-            name: nameInput.value,
-            description: descriptionInput.value,
-          }
-        );
-
-        downloadPresetJson(
-          preset,
-          presetFilename(preset.name)
-        );
-
-        // Keep a copy available until this browser session ends.
-        importedDocuments.push(preset);
-        catalog.push(catalogItem(preset, "Local file"));
-        renderCatalog();
-
-        message(
-          "Preset JSON download requested. A copy is also available " +
-          "in this browser session's library."
-        );
-      } catch (error) {
-        message(error.message);
-      }
-    }
-  );
+  });
 
   importInput.addEventListener("change", async (event) => {
     const current = context();
 
-    if (!current) return;
+    if (!current || locked()) return;
 
     importing = true;
-    dialog.querySelector("#presets-add").disabled = true;
+    syncControls();
 
     const files = [...event.target.files];
 
@@ -630,13 +744,17 @@ export function mountPresetLibrary({
         throw new Error("The load stack supports at most 64 layers.");
       }
 
-      // All files have been validated before the library is changed.
+      // The entire batch is validated before either collection changes.
       for (const preset of imported) {
         importedDocuments.push(preset);
         catalog.push(catalogItem(preset, "Local file"));
-        addToQueue(preset);
+        queue.push({
+          key: newKey(),
+          preset,
+        });
       }
 
+      changedQueue();
       renderCatalog();
 
       message(
@@ -649,10 +767,14 @@ export function mountPresetLibrary({
       importing = false;
       importInput.value = "";
       renderCatalog();
+      syncControls();
     }
   });
 
   function close() {
+    generation += 1;
+    loading = false;
+    loadingDataset = null;
     invalidate();
 
     if (dialog.open) {
@@ -660,24 +782,20 @@ export function mountPresetLibrary({
     }
   }
 
-  dialog.querySelector("#presets-close").addEventListener(
-    "click",
-    close
-  );
-
+  find("#presets-close").addEventListener("click", close);
   dialog.addEventListener("close", invalidate);
 
   opener.addEventListener("click", () => {
-    if (busy || dialog.open || !context()) return;
+    const current = context();
+
+    if (busy || dialog.open || !current) return;
 
     onOpen();
-    initialize();
     invalidate();
-    renderCatalog();
-    renderQueue();
     message("");
 
     dialog.showModal();
+    initialize(current.dataset);
   });
 
   return {
@@ -693,11 +811,11 @@ export function mountPresetLibrary({
         return;
       }
 
-      if (current.dataset !== catalogDataset) {
-        initialize();
-        message(
-          "The dataset changed. Rebuild the stack for the new dataset."
-        );
+      if (
+        current.dataset !== loadedDataset &&
+        current.dataset !== loadingDataset
+      ) {
+        initialize(current.dataset);
         return;
       }
 
@@ -718,21 +836,11 @@ export function mountPresetLibrary({
     setBusy(value) {
       busy = value;
       opener.disabled = value || !context();
-
-      for (const control of dialog.querySelectorAll(
-        "button, input, select, textarea"
-      )) {
-        control.disabled = value;
-      }
-
-      if (!value) {
-        applyButton.disabled = !plan;
-        renderCatalog();
-        renderQueue();
-      }
+      syncControls();
     },
 
     destroy() {
+      destroyed = true;
       close();
       opener.remove();
       dialog.remove();

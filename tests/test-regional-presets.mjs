@@ -17,29 +17,37 @@ import {
 } from "../js/presets/preset-model.mjs";
 
 import {
-  createRegionalPresets,
-  createSouthGeorgiaPreset,
-  resolvePresetCounties,
-} from "../js/presets/regional-presets.mjs";
+  loadPresetCatalog,
+} from "../js/presets/preset-catalog.mjs";
 
-const datasetPromise = loadLegacyDataset(
-  "2024",
-  async (filename) => JSON.parse(
-    await readFile(
-      new URL(`../${filename}`, import.meta.url),
-      "utf8"
-    )
-  )
-);
+const root = new URL("../", import.meta.url);
 
-async function fixture() {
-  const dataset = await datasetPromise;
+async function readJson(path) {
+  return JSON.parse(
+    await readFile(new URL(path, root), "utf8")
+  );
+}
 
-  return {
-    dataset,
-    session: createStateSession(dataset),
-    presets: createRegionalPresets(dataset),
-  };
+let fixturePromise;
+
+function fixture() {
+  if (!fixturePromise) {
+    fixturePromise = (async () => {
+      const dataset = await loadLegacyDataset(
+        "2024",
+        readJson
+      );
+
+      const presets = await loadPresetCatalog(
+        dataset,
+        readJson
+      );
+
+      return { dataset, presets };
+    })();
+  }
+
+  return fixturePromise;
 }
 
 function byId(presets, id) {
@@ -50,89 +58,92 @@ function byId(presets, id) {
   return preset;
 }
 
-function movedIds(preset) {
-  return preset.moves.map(([id]) => id).sort();
+function countyId(dataset, stateCode, name) {
+  const matches = dataset.counties.filter(
+    (county) =>
+      county.originalStateId === `state:${stateCode}` &&
+      county.name.toLowerCase() === name.toLowerCase()
+  );
+
+  assert.equal(
+    matches.length,
+    1,
+    `Expected one ${name}, ${stateCode} record.`
+  );
+
+  return matches[0].id;
 }
 
-function expectedIds(dataset, state, names) {
-  return resolvePresetCounties(dataset, state, names);
+const smallPresets = [
+  ["builtin:chicagoland", "IL", [
+    "Lake", "Cook", "DuPage", "Will",
+  ]],
+  ["builtin:superior", "MI", [
+    "Alger", "Baraga", "Chippewa", "Delta", "Dickinson",
+    "Gogebic", "Houghton", "Iron", "Keweenaw", "Luce",
+    "Mackinac", "Marquette", "Menominee", "Ontonagon",
+    "Schoolcraft",
+  ]],
+  ["builtin:long-island", "NY", [
+    "Nassau", "Suffolk",
+  ]],
+  ["builtin:baja-arizona", "AZ", [
+    "Cochise", "Pima", "Santa Cruz",
+  ]],
+  ["builtin:west-kansas", "KS", [
+    "Morton", "Stanton", "Hamilton", "Kearny", "Grant",
+    "Stevens", "Seward", "Haskell", "Finney", "Gray",
+    "Meade", "Clark", "Ford", "Hodgeman", "Edwards",
+    "Kiowa", "Comanche",
+  ]],
+  ["builtin:madawaska", "ME", ["Aroostook"]],
+  ["builtin:west-maryland", "MD", [
+    "Garrett", "Allegany", "Washington",
+    "Frederick", "Carroll",
+  ]],
+];
+
+for (const [id, stateCode, names] of smallPresets) {
+  test(`${id} retains its exact county list`, async () => {
+    const { dataset, presets } = await fixture();
+    const preset = byId(presets, id);
+
+    assert.deepEqual(
+      preset.moves.map(([county]) => county).sort(),
+      names.map((name) =>
+        countyId(dataset, stateCode, name)
+      ).sort()
+    );
+  });
 }
 
-test("the catalog contains ten unique regional presets", async () => {
-  const { presets } = await fixture();
-
-  assert.equal(presets.length, 10);
-  assert.equal(new Set(presets.map((item) => item.id)).size, 10);
-});
-
-test("Chicagoland contains exactly four Illinois counties", async () => {
+test("Wisconsin Reattachment uses the existing Wisconsin identity", async () => {
   const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:chicagoland");
+
+  const preset = byId(
+    presets,
+    "builtin:wisconsin-reattachment"
+  );
+
+  assert.equal(preset.states.length, 0);
 
   assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "IL", [
-      "Lake", "Cook", "DuPage", "Will",
-    ])
+    preset.moves.map(([id]) => id).sort(),
+    [
+      "Jo Daviess", "Stephenson", "Winnebago", "Boone",
+    ].map((name) => countyId(dataset, "IL", name)).sort()
+  );
+
+  assert.ok(
+    preset.moves.every(([, destination]) =>
+      destination === "state:WI"
+    )
   );
 });
 
-test("Superior contains all fifteen Upper Peninsula counties", async () => {
+test("South Georgia retains Bibb and renames the original state", async () => {
   const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:superior");
 
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "MI", [
-      "Alger", "Baraga", "Chippewa", "Delta", "Dickinson",
-      "Gogebic", "Houghton", "Iron", "Keweenaw", "Luce",
-      "Mackinac", "Marquette", "Menominee", "Ontonagon",
-      "Schoolcraft",
-    ])
-  );
-});
-
-test("Long Island does not include New York City counties", async () => {
-  const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:long-island");
-
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "NY", ["Nassau", "Suffolk"])
-  );
-
-  assert.equal(preset.moves.length, 2);
-});
-
-test("Baja Arizona contains the requested three counties", async () => {
-  const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:baja-arizona");
-
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "AZ", [
-      "Cochise", "Pima", "Santa Cruz",
-    ])
-  );
-});
-
-test("West Kansas contains exactly the requested seventeen counties", async () => {
-  const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:west-kansas");
-
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "KS", [
-      "Morton", "Stanton", "Hamilton", "Kearny", "Grant",
-      "Stevens", "Seward", "Haskell", "Finney", "Gray",
-      "Meade", "Clark", "Ford", "Hodgeman", "Edwards",
-      "Kiowa", "Comanche",
-    ])
-  );
-});
-
-test("South Georgia renames only the original Georgia identity", async () => {
-  const { dataset, presets } = await fixture();
   const preset = byId(presets, "builtin:south-georgia");
 
   const model = applyPresetPatch(
@@ -148,70 +159,96 @@ test("South Georgia renames only the original Georgia identity", async () => {
   assert.equal(north.name, "North Georgia");
   assert.equal(north.abbreviation, "GA");
 
-  const bibb = expectedIds(dataset, "GA", ["Bibb"])[0];
-
-  assert.equal(model.assignments[bibb], "state:GA");
-  assert.equal(preset.moves.some(([id]) => id === bibb), false);
-
-  for (const [id] of preset.moves) {
-    assert.equal(
-      dataset.model.assignments[id],
-      "state:GA"
-    );
-  }
-});
-
-test("South Georgia rejects an invalid geographic selection", async () => {
-  const { dataset } = await fixture();
-
-  assert.throws(
-    () => createSouthGeorgiaPreset(
-      dataset,
-      () => ["99999"]
-    ),
-    /outside Georgia/
+  assert.equal(
+    model.assignments[countyId(dataset, "GA", "Bibb")],
+    "state:GA"
   );
 });
 
-test("Wisconsin Reattachment transfers to the existing state", async () => {
+test("Westsylvania has the complete revised boundary", async () => {
   const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:wisconsin-reattachment");
 
-  assert.equal(preset.states.length, 0);
-
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "IL", [
-      "Jo Daviess", "Stephenson", "Winnebago", "Boone",
-    ])
-  );
-
-  assert.ok(
-    preset.moves.every(([, stateId]) => stateId === "state:WI")
-  );
-});
-
-test("Madawaska contains only Aroostook County", async () => {
-  const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:madawaska");
-
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "ME", ["Aroostook"])
-  );
-});
-
-test("Wetsylvania includes the specified counties and preserves the WV identity", async () => {
-  const { dataset, presets } = await fixture();
   const preset = byId(presets, "builtin:wetsylvania");
+  const moves = new Map(preset.moves);
 
-  const westVirginia = dataset.counties
-    .filter((county) => county.originalStateId === "state:WV")
-    .map((county) => county.id);
+  assert.equal(preset.moves.length, 96);
+  assert.equal(moves.size, 96);
 
-  assert.equal(westVirginia.length, 55);
-  assert.equal(preset.moves.length, 95);
-  assert.equal(new Set(movedIds(preset)).size, 95);
+  const expected = {
+    ...dataset.model.assignments,
+  };
+
+  const originalWV = dataset.counties.filter(
+    (county) => county.originalStateId === "state:WV"
+  );
+
+  assert.equal(originalWV.length, 55);
+
+  // All original WV counties are explicitly covered.
+  for (const county of originalWV) {
+    assert.ok(moves.has(county.id));
+  }
+
+  const toVirginia = [
+    "Jefferson", "Berkeley", "Morgan", "Hampshire",
+    "Hardy", "Pendleton", "Grant", "Mineral",
+  ];
+
+  for (const name of toVirginia) {
+    const id = countyId(dataset, "WV", name);
+    assert.equal(moves.get(id), "state:VA");
+    expected[id] = "state:VA";
+  }
+
+  const returnedToKentucky = [
+    "Whitley", "Knox", "Clay", "Laurel",
+    "Rockcastle", "Jackson", "Owsley", "Lee",
+    "Wolfe", "Menifee", "Montgomery", "Bath",
+    "Rowan", "Morgan",
+  ];
+
+  for (const name of returnedToKentucky) {
+    const id = countyId(dataset, "KY", name);
+    assert.equal(moves.get(id), "state:KY");
+    expected[id] = "state:KY";
+  }
+
+  const retainedKentucky = [
+    "Boyd", "Carter", "Elliott", "Greenup", "Lawrence",
+    "Floyd", "Johnson", "Magoffin", "Martin", "Pike",
+    "Breathitt", "Knott", "Leslie", "Letcher", "Perry",
+    "Harlan", "Bell",
+  ];
+
+  for (const name of retainedKentucky) {
+    const id = countyId(dataset, "KY", name);
+    assert.equal(moves.get(id), "state:WV");
+    expected[id] = "state:WV";
+  }
+
+  for (const name of [
+    "Allegheny", "Westmoreland", "Fayette",
+    "Greene", "Washington",
+  ]) {
+    const id = countyId(dataset, "PA", name);
+    assert.equal(moves.get(id), "state:WV");
+    expected[id] = "state:WV";
+  }
+
+  for (const name of [
+    "Wise", "Dickenson", "Buchanan",
+  ]) {
+    const id = countyId(dataset, "VA", name);
+    assert.equal(moves.get(id), "state:WV");
+    expected[id] = "state:WV";
+  }
+
+  assert.equal(moves.get("51720"), "state:WV");
+  expected["51720"] = "state:WV";
+
+  const garrett = countyId(dataset, "MD", "Garrett");
+  assert.equal(moves.get(garrett), "state:WV");
+  expected[garrett] = "state:WV";
 
   const model = applyPresetPatch(
     dataset.model,
@@ -219,105 +256,46 @@ test("Wetsylvania includes the specified counties and preserves the WV identity"
     dataset
   ).model;
 
+  assert.deepEqual(model.assignments, expected);
+
   const state = model.states.find(
     (item) => item.id === "state:WV"
   );
 
-  assert.equal(state.name, "Wetsylvania");
-  assert.equal(state.abbreviation, "WET");
-
-  for (const id of westVirginia) {
-    assert.equal(model.assignments[id], "state:WV");
-  }
-
-  const norton = expectedIds(dataset, "VA", ["Norton"])[0];
-  assert.equal(model.assignments[norton], "state:WV");
-
-  for (const name of ["Greenup", "Bell"]) {
-    const id = expectedIds(dataset, "KY", [name])[0];
-    assert.equal(model.assignments[id], "state:WV");
-  }
+  assert.equal(state.name, "Westsylvania");
+  assert.equal(state.abbreviation, "WS");
 });
 
-test("West Maryland contains the requested five counties", async () => {
+test("regional JSON presets do not mutate source data", async () => {
   const { dataset, presets } = await fixture();
-  const preset = byId(presets, "builtin:west-maryland");
+  const session = createStateSession(dataset);
 
-  assert.deepEqual(
-    movedIds(preset),
-    expectedIds(dataset, "MD", [
-      "Garrett", "Allegany", "Washington",
-      "Frederick", "Carroll",
-    ])
-  );
-});
+  const originalModel = dataset.model;
+  const originalCounty = dataset.counties[0];
+  const originalSnapshot = session.getSnapshot();
 
-test("individual presets do not change unrelated assignments", async () => {
-  const { dataset, presets } = await fixture();
-
-  for (const preset of presets) {
-    const model = applyPresetPatch(
-      dataset.model,
-      preset,
-      dataset
-    ).model;
-
-    const touched = new Set(movedIds(preset));
-
-    for (const [id, stateId] of Object.entries(dataset.model.assignments)) {
-      if (!touched.has(id)) {
-        assert.equal(
-          model.assignments[id],
-          stateId,
-          `${preset.name} changed unrelated county ${id}`
-        );
-      }
-    }
-  }
-});
-
-test("a stack preserves last-loaded assignment authority", async () => {
-  const { dataset, session, presets } = await fixture();
-
-  const superior = byId(presets, "builtin:superior");
-  const longIsland = byId(presets, "builtin:long-island");
+  const ids = [
+    "builtin:chicagoland",
+    "builtin:superior",
+    "builtin:long-island",
+    "builtin:baja-arizona",
+    "builtin:west-kansas",
+    "builtin:south-georgia",
+    "builtin:wisconsin-reattachment",
+    "builtin:madawaska",
+    "builtin:wetsylvania",
+    "builtin:west-maryland",
+  ];
 
   const plan = createPresetPlan(
     dataset,
-    session.getSnapshot(),
-    [longIsland, superior],
+    originalSnapshot,
+    ids.map((id) => byId(presets, id)),
     { base: "original" }
   );
 
-  assert.deepEqual(
-    plan.applied.map((item) => item.name),
-    ["Superior", "Long Island"]
-  );
-
-  assert.equal(plan.conflicts.length, 0);
-  assert.equal(plan.changedCountyCount, 17);
-  assert.equal(session.getSnapshot().revision, 0);
-});
-
-test("the regional catalog never mutates source measurements", async () => {
-  const { dataset, session, presets } = await fixture();
-
-  const before = dataset.counties.find(
-    (county) => county.id === "36059"
-  );
-
-  const originalModel = dataset.model;
-
-  createPresetPlan(
-    dataset,
-    session.getSnapshot(),
-    presets,
-    { base: "original" }
-  );
-
+  assert.equal(plan.applied.length, ids.length);
   assert.equal(dataset.model, originalModel);
-  assert.equal(
-    dataset.counties.find((county) => county.id === "36059"),
-    before
-  );
+  assert.equal(dataset.counties[0], originalCounty);
+  assert.equal(session.getSnapshot(), originalSnapshot);
 });

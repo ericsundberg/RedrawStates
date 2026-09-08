@@ -1,0 +1,28 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:mcdonald-territory",
+  "name": "McDonald Territory",
+  "description": "A hypothetical state inspired by McDonald County, Missouri's symbolic territory movement of 1961–62. Modern McDonald County is separated as a single-county state. The historical movement was a protest and publicity effort, not a formally admitted state.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "McDonald Territory",
+    "url": "https://en.wikipedia.org/wiki/McDonald_Territory"
+  },
+  "states": [
+    {
+      "id": "custom:preset:mcdonald-territory",
+      "name": "McDonald",
+      "abbreviation": "MC",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["29119", "custom:preset:mcdonald-territory"]
+  ],
+  "removeStates": []
+}

@@ -1,0 +1,28 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:state-of-scott",
+  "name": "State of Scott",
+  "description": "A hypothetical state based on Scott County, Tennessee, and its Civil War-era declaration of independence from Tennessee. The modern county is represented as a single-county state. The preset is not an assertion that Scott received federal recognition as a state.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "State of Scott",
+    "url": "https://en.wikipedia.org/wiki/State_of_Scott"
+  },
+  "states": [
+    {
+      "id": "custom:preset:state-of-scott",
+      "name": "Scott",
+      "abbreviation": "ST",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["47151", "custom:preset:state-of-scott"]
+  ],
+  "removeStates": []
+}

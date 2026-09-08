@@ -1,0 +1,28 @@
+{
+  "format": "redraw-states-preset",
+  "version": 1,
+  "id": "builtin:state-of-winston",
+  "name": "State of Winston",
+  "description": "A hypothetical single-county state inspired by the Civil War-era Republic of Winston and Unionist sentiment in northern Alabama. The preset uses modern Winston County rather than attempting to reproduce an uncertain historical regional boundary. It does not imply that an independent state was formally recognized.",
+  "geography": {
+    "schema": "redraw-legacy-v1",
+    "inventory": "3113:5631a266"
+  },
+  "sourceDataset": "2024",
+  "source": {
+    "title": "Republic of Winston",
+    "url": "https://en.wikipedia.org/wiki/Republic_of_Winston"
+  },
+  "states": [
+    {
+      "id": "custom:preset:state-of-winston",
+      "name": "Winston",
+      "abbreviation": "WN",
+      "kind": "state"
+    }
+  ],
+  "moves": [
+    ["01133", "custom:preset:state-of-winston"]
+  ],
+  "removeStates": []
+}

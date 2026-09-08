@@ -6,6 +6,11 @@
  */
 
 import {
+  createDissolveAllPlan,
+  selectCurrentStateCounties,
+} from "./bulk-state-operations.mjs";
+
+import {
   createStateModel,
   removeState,
   renameState,
@@ -184,6 +189,49 @@ export function createStateManager(session, originalModel, createId) {
     );
   }
 
+  function previewDissolveAll() {
+    const snapshot = getSnapshot();
+    const plan = createDissolveAllPlan(snapshot.model);
+
+    return Object.freeze({
+      ...plan,
+      snapshot,
+      revision: snapshot.revision,
+    });
+  }
+
+  function dissolveAll(plan) {
+    const snapshot = getSnapshot();
+
+    if (
+      !plan ||
+      plan.snapshot !== snapshot ||
+      plan.revision !== snapshot.revision ||
+      plan.model !== snapshot.model
+    ) {
+      throw new Error(
+        "The configuration changed. Review the dissolution again."
+      );
+    }
+
+    // Recalculate from the live snapshot rather than trusting a supplied model.
+    const verified = createDissolveAllPlan(snapshot.model);
+
+    if (verified.nextModel === snapshot.model) {
+      return snapshot;
+    }
+
+    return session.replaceModel(verified.nextModel);
+  }
+
+  function selectStateCounties(countyId, selectedCountyIds = []) {
+    return selectCurrentStateCounties(
+      getSnapshot().model,
+      countyId,
+      selectedCountyIds
+    );
+  }
+
   return Object.freeze({
     getSnapshot,
     listStates,
@@ -192,5 +240,8 @@ export function createStateManager(session, originalModel, createId) {
     restoreName,
     previewDissolution,
     dissolve,
+    previewDissolveAll,
+    dissolveAll,
+    selectStateCounties,
   });
 }
